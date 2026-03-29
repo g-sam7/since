@@ -18,18 +18,16 @@ function App() {
         </p>
         <div className="flex flex-wrap gap-3">
           <a
-            href="/about"
+            href="/sign-up"
             className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
           >
-            About This Starter
+            Get Started
           </a>
           <a
-            href="https://tanstack.com/router"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/sign-in"
             className="rounded-full border border-[rgba(23,58,64,0.2)] bg-white/50 px-5 py-2.5 text-sm font-semibold text-[var(--sea-ink)] no-underline transition hover:-translate-y-0.5 hover:border-[rgba(23,58,64,0.35)]"
           >
-            Router Guide
+            Sign In
           </a>
         </div>
       </section>

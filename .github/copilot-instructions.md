@@ -16,7 +16,7 @@ Users track everyday recurring tasks (working out, changing air filters, car mai
 - **Reminders**: Email-based daily digest for overdue tasks
 - **Audit trail**: Lightweight logging of key actions (created, updated, completed)
 
-Derived state (last_completed_at, next_due_at, overdue status) is **computed, not stored**.
+Derived state (`last_completed_at`, `next_due_at`, overdue status) is **computed, not stored**.
 
 ---
 
@@ -37,27 +37,39 @@ Derived state (last_completed_at, next_due_at, overdue status) is **computed, no
 | Testing | Vitest |
 | Package manager | pnpm |
 
+### Infrastructure Direction
+
+- **Local development DB**: PostgreSQL via Docker
+- **Production DB target**: AWS RDS PostgreSQL
+- **Database portability requirement**: build against standard PostgreSQL and environment-driven connection settings only
+- Do not introduce Supabase, Firebase, or other hosted database/auth platforms unless explicitly requested
+
 ---
 
 ## Project Structure
 
-```
+```txt
 src/
 ├── components/          # Shared UI components
 │   └── ui/              # shadcn/ui primitives
 ├── db/
 │   ├── index.ts         # Database connection
-│   └── schema.ts        # Drizzle schema definitions
+│   ├── schema.ts        # Drizzle schema entrypoint
+│   └── auth-schema.ts   # Better Auth generated schema (if present, generated/owned)
 ├── hooks/               # Shared hooks
 ├── integrations/        # Third-party integration wrappers
 │   ├── better-auth/     # Auth UI components
 │   └── tanstack-query/  # Query provider & devtools
 ├── lib/
 │   ├── auth.ts          # Better Auth server config
-│   ├── auth-client.ts   # Better Auth client (useSession)
+│   ├── auth-client.ts   # Better Auth client
+│   ├── auth-session.ts  # Server-side session helper
 │   └── utils.ts         # Utilities (cn() for className merging)
 ├── routes/              # File-based routes (TanStack Router)
-│   └── api/auth/$.ts    # Auth API catch-all handler
+│   ├── api/auth/$.ts    # Auth API catch-all handler
+│   ├── sign-in.tsx
+│   ├── sign-up.tsx
+│   └── _authed.tsx      # Protected route layout
 ├── env.ts               # Type-safe env vars (T3Env + Zod)
 ├── router.tsx           # Router config with QueryClient context
 ├── routeTree.gen.ts     # AUTO-GENERATED — never edit
