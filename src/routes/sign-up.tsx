@@ -46,7 +46,7 @@ function SignUp() {
       })
 
       if (result.error) {
-        setError(result.error.message ?? 'Sign up failed. Please try again.')
+        setError('Unable to create account. Please try again.')
         return
       }
 

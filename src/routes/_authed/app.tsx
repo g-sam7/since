@@ -7,6 +7,8 @@ export const Route = createFileRoute('/_authed/app')({
 })
 
 function AppPage() {
+  // Authorization is enforced by the _authed route guard (server-side).
+  // This hook is for display purposes only — do not use it for access control.
   const { data: session } = authClient.useSession()
 
   return (
