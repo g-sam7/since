@@ -65,11 +65,14 @@ src/
 │   ├── auth-client.ts   # Better Auth client
 │   ├── auth-session.ts  # Server-side session helper
 │   └── utils.ts         # Utilities (cn() for className merging)
+├── data/                # Static data / seed helpers
 ├── routes/              # File-based routes (TanStack Router)
 │   ├── api/auth/$.ts    # Auth API catch-all handler
 │   ├── sign-in.tsx
 │   ├── sign-up.tsx
-│   └── _authed.tsx      # Protected route layout
+│   ├── _authed.tsx      # Protected route layout
+│   └── _authed/
+│       └── app.tsx      # Main authenticated app page
 ├── env.ts               # Type-safe env vars (T3Env + Zod)
 ├── router.tsx           # Router config with QueryClient context
 ├── routeTree.gen.ts     # AUTO-GENERATED — never edit
@@ -86,15 +89,35 @@ src/
 - **Database**: PostgreSQL via Drizzle. Schema in `src/db/schema.ts`, config in `drizzle.config.ts`. Connection configured via environment variables.
 - **Env vars**: Defined with Zod validation in `src/env.ts`. Prefix client vars with `VITE_`.
 
+### Required Environment Variables
+
+| Variable | Scope | Description |
+|----------|-------|-------------|
+| `DATABASE_URL` | Server | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Server | Auth secret key (min 32 chars) |
+| `SERVER_URL` | Server | Application URL (optional) |
+| `VITE_APP_TITLE` | Client | App title (optional) |
+
+All server env vars are validated at startup via `src/env.ts`. Add new vars there with a Zod schema.
+
+### Auth Patterns (Established)
+
+- **Session helper**: `getAuthSession()` in `src/lib/auth-session.ts` — a `createServerFn` that returns the current session or `null`. Use in route `beforeLoad` guards.
+- **Protected routes**: Nest route files under `src/routes/_authed/`. The `_authed.tsx` layout calls `getAuthSession()` in `beforeLoad` and redirects unauthenticated users to `/sign-in`.
+- **Redirect-if-authenticated**: Public auth pages (`sign-in.tsx`, `sign-up.tsx`) check the session in `beforeLoad` and redirect to `/app` if the user is already signed in.
+- **Auth schema ownership**: `src/db/auth-schema.ts` is generated/owned by Better Auth — do not hand-edit. `src/db/schema.ts` re-exports it and is the entrypoint for adding new app tables.
+- Never rely on client-side session state for authorization
+
 ---
 
 ## Target Module Architecture
 
-New features should follow this modular structure (not yet created — build toward it):
+New features should follow this modular structure (not yet created — build toward it).
+
+> **Note:** Auth is already implemented across `lib/`, `db/`, `routes/`, and `integrations/`. It does not need to move into `modules/auth/`. Future auth changes should follow the existing locations.
 
 ```
 src/modules/
-├── auth/
 ├── workspaces/
 ├── tasks/
 ├── completions/
@@ -167,6 +190,6 @@ pnpm lint             # ESLint check
 pnpm check            # Prettier write + ESLint fix
 pnpm db:generate      # Generate Drizzle migrations
 pnpm db:migrate       # Run Drizzle migrations
-pnpm db:push          # Push schema to database
 pnpm db:studio        # Open Drizzle Studio
+# pnpm db:push is intentionally disabled — always use db:generate + db:migrate
 ```
