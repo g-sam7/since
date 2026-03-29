@@ -60,9 +60,9 @@ function SignIn() {
     <main className="page-wrap flex min-h-[60vh] items-center justify-center px-4 py-14">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Sign in</CardTitle>
+          <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>
-            Enter your credentials to access your account
+            Sign in to your account
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -97,7 +97,7 @@ function SignIn() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-3">
+          <CardFooter className="flex flex-col gap-3 py-6">
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>

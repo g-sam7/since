@@ -62,9 +62,9 @@ function SignUp() {
     <main className="page-wrap flex min-h-[60vh] items-center justify-center px-4 py-14">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Create an account</CardTitle>
+          <CardTitle className="text-2xl">Create your account</CardTitle>
           <CardDescription>
-            Enter your details below to get started
+            Get started with Since
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -111,7 +111,7 @@ function SignUp() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-3">
+          <CardFooter className="flex flex-col gap-3 py-6">
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Creating account...' : 'Sign up'}
             </Button>
