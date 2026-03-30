@@ -15,7 +15,7 @@
     "check": "prettier --write . && eslint --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
+    "db:push": "echo 'Do not use db:push. Use db:generate + db:migrate instead.' && exit 1",
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio"
   },
