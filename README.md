@@ -8,7 +8,7 @@ Track everyday recurring tasks — working out, changing air filters, car mainte
 
 - [Node.js](https://nodejs.org/) (v20+)
 - [pnpm](https://pnpm.io/) (`npm install -g pnpm`)
-- [PostgreSQL](https://www.postgresql.org/) (for database)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) or another Docker installation with Docker Compose v2
 
 ## Getting Started
 
@@ -16,8 +16,24 @@ Track everyday recurring tasks — working out, changing air filters, car mainte
 # Install dependencies
 pnpm install
 
-# Start the dev server
+# Create a local env file
+# DATABASE_URL=postgresql://postgres:postgres@localhost:5432/since
+# BETTER_AUTH_SECRET=replace-this-with-at-least-32-characters
+
+# Start PostgreSQL, run migrations, then start Vite
 pnpm dev
+```
+
+If PostgreSQL is already running, start just the app with:
+
+```sh
+pnpm dev:app
+```
+
+To start only the local database service:
+
+```sh
+pnpm dev:db
 ```
 
 ## Tech Stack
