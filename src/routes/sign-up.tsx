@@ -60,7 +60,7 @@ function SignUp() {
 
   return (
     <main className="page-wrap flex min-h-[60vh] items-center justify-center px-4 py-14">
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm border-border/80 shadow-[0_18px_40px_var(--shadow-color)]">
         <CardHeader>
           <CardTitle className="text-2xl">Create your account</CardTitle>
           <CardDescription>
