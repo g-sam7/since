@@ -1,4 +1,5 @@
 import { authClient } from '#/lib/auth-client'
+import { Button } from '#/components/ui/button'
 import { Link, useNavigate } from '@tanstack/react-router'
 
 export default function BetterAuthHeader() {
@@ -7,7 +8,7 @@ export default function BetterAuthHeader() {
 
   if (isPending) {
     return (
-      <div className="h-8 w-8 bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+      <div className="h-9 w-16 animate-pulse rounded-full border border-border bg-surface-subtle" />
     )
   }
 
@@ -15,15 +16,15 @@ export default function BetterAuthHeader() {
     return (
       <div className="flex items-center gap-2">
         {session.user.image ? (
-          <img src={session.user.image} alt="" className="h-8 w-8" />
+          <img src={session.user.image} alt="" className="h-8 w-8 rounded-full border border-border object-cover" />
         ) : (
-          <div className="h-8 w-8 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface-subtle">
+            <span className="text-xs font-medium text-muted-foreground">
               {session.user.name?.charAt(0).toUpperCase() || 'U'}
             </span>
           </div>
         )}
-        <button
+        <Button
           onClick={async () => {
             try {
               await authClient.signOut()
@@ -32,20 +33,19 @@ export default function BetterAuthHeader() {
             }
             await navigate({ to: '/sign-in' })
           }}
-          className="flex-1 h-9 px-4 text-sm font-medium bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+          variant="outline"
+          size="sm"
+          className="rounded-full bg-surface-subtle px-4"
         >
           Sign out
-        </button>
+        </Button>
       </div>
     )
   }
 
   return (
-    <Link
-      to="/sign-in"
-      className="h-9 px-4 text-sm font-medium bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors inline-flex items-center"
-    >
-      Sign in
-    </Link>
+    <Button asChild variant="outline" size="sm" className="rounded-full bg-surface-subtle px-4">
+      <Link to="/sign-in">Sign in</Link>
+    </Button>
   )
 }
