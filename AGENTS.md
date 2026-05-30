@@ -98,6 +98,33 @@ Rule: business logic belongs in domain/services, not React components.
 - `pnpm db:migrate`
 - `pnpm db:studio`
 
+## Storybook
+
+Storybook runs on port 6006 (`pnpm storybook`). Stories live in `src/stories/`.
+
+Setup facts:
+- Framework package is `@storybook/tanstack-react` — never import from `@storybook/react`
+- Story files must be `.tsx` (not `.ts`) since they render JSX
+- Global styles are imported in `.storybook/preview.tsx` via `import '../src/styles.css'`
+
+UI component conventions:
+- All files in `src/components/ui/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
+- Exported function names match the filename exactly (e.g. `TextArea`, not `Textarea`)
+
+Every story file should include:
+1. **Playground** — a single story with `args` wired to controls so every prop is interactive
+2. **Variant/size grids** (for components with variants/sizes) — render all options side by side, labeled with `font-mono` captions
+3. **State stories** — at minimum: disabled, and `aria-invalid` if the component supports it
+4. **Composition stories** (for compound components) — show meaningful real-world arrangements of sub-components; skip compositions that don't appear in practice
+5. **Real-world example** — at least one story showing the component in a realistic UI context (e.g. a form group, a settings list)
+
+Story file conventions:
+- Import type from `@storybook/tanstack-react`
+- Use `parameters: { layout: 'centered' }` for all UI component stories
+- Use a `decorators` width wrapper (`w-80` or `w-96`) so stories aren't edge-to-edge
+- Override the decorator per-story when a story needs different dimensions
+- Use `defaultValue` (not `value`) in render functions so stories remain uncontrolled
+
 ## Codex Execution Guidance
 When implementing tasks in this repo:
 - Preserve existing architecture and naming patterns.

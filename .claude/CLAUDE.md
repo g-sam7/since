@@ -113,6 +113,53 @@ Add new vars to `src/env.ts` with a Zod schema.
 
 ---
 
+## Storybook
+
+Storybook runs on port 6006 (`pnpm storybook`). Stories live in `src/stories/`.
+
+### Setup facts
+- Framework package is `@storybook/tanstack-react` — never import from `@storybook/react`
+- Story files must be `.tsx` (not `.ts`) since they render JSX
+- Global styles are imported in `.storybook/preview.tsx` via `import '../src/styles.css'`
+- `"use client"` directives in shadcn components are no-ops in TanStack Start — remove them when touching a file
+
+### UI component conventions
+- All files in `src/components/ui/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
+- Exported function names match the filename exactly (e.g. `TextArea`, not `Textarea`)
+- When renaming a component file: grep for all imports and update them in the same step
+
+### Story structure
+Every story file should include:
+
+1. **Playground** — a single story with `args` wired to controls so every prop is interactive
+2. **Variant/size grids** (for components with variants/sizes) — render all options side by side, labeled with `font-mono` captions
+3. **State stories** — at minimum: disabled, and `aria-invalid` if the component supports it
+4. **Composition stories** (for compound components) — show meaningful real-world arrangements of sub-components, not contrived ones; skip compositions that don't appear in practice
+5. **Real-world example** — at least one story that shows the component in a realistic UI context (e.g. a form group, a settings list)
+
+### Story file template conventions
+```tsx
+import type { Meta, StoryObj } from '@storybook/tanstack-react'
+
+const meta = {
+  title: 'UI/ComponentName',
+  component: ComponentName,
+  tags: ['autodocs'],
+  parameters: { layout: 'centered' },
+  decorators: [(Story) => <div className="w-80"><Story /></div>], // set a sensible fixed width
+} satisfies Meta<typeof ComponentName>
+
+export default meta
+type Story = StoryObj<typeof meta>
+```
+
+- Use `parameters: { layout: 'centered' }` for all UI component stories
+- Use a `decorators` width wrapper (`w-80` or `w-96`) so stories aren't edge-to-edge
+- Override the decorator per-story when a story needs different dimensions (e.g. vertical sliders need a height wrapper)
+- Use `defaultValue` (not `value`) in render functions so stories remain uncontrolled
+
+---
+
 ## Hard Rules
 
 - **Never edit** `src/routeTree.gen.ts` or `src/db/auth-schema.ts`
