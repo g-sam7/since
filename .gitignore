@@ -15,3 +15,6 @@ package-lock.json
 *.log
 coverage/
 *.tsbuildinfo
+
+*storybook.log
+storybook-static
