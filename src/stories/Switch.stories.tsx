@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { Switch } from '#/components/ui/Switch'
-import { Label } from '#/components/ui/Label'
+import { Switch } from '#/components/utils/Switch'
+import { Label } from '#/components/utils/Label'
 
 const meta = {
-  title: 'UI/Switch',
+  title: 'Utils/Switch',
   component: Switch,
   tags: ['autodocs'],
   parameters: {

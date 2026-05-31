@@ -8,7 +8,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { Button } from '#/components/ui/Button'
+import { Button } from '#/components/utils/Button'
 
 import TanStackQueryProvider from '../integrations/tanstack-query/root-provider'
 

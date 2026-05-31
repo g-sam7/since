@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { Input } from '#/components/ui/Input'
+import { Input } from '#/components/utils/Input'
 
 const meta = {
-  title: 'UI/Input',
+  title: 'Utils/Input',
   component: Input,
   tags: ['autodocs'],
   parameters: {

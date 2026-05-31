@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { Label } from '#/components/ui/Label'
-import { Input } from '#/components/ui/Input'
-import { Button } from '#/components/ui/Button'
+import { Label } from '#/components/utils/Label'
+import { Input } from '#/components/utils/Input'
+import { Button } from '#/components/utils/Button'
 
 const meta = {
-  title: 'UI/Label',
+  title: 'Utils/Label',
   component: Label,
   tags: ['autodocs'],
   parameters: {

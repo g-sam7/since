@@ -46,7 +46,7 @@ pnpm db:studio        # Open Drizzle Studio
 
 ```
 src/
-├── components/ui/       # shadcn/ui primitives
+├── components/utils/       # shadcn/ui primitives
 ├── db/
 │   ├── index.ts         # DB connection
 │   ├── schema.ts        # Drizzle schema entrypoint (add app tables here)
@@ -90,7 +90,7 @@ Each module: domain logic → services → data access → server functions → 
 
 - **Path alias**: `#/*` → `src/*` (preferred over `@/*`)
 - **className merging**: `cn()` from `#/lib/utils`
-- **UI components**: shadcn primitives from `#/components/ui/`
+- **UI components**: shadcn primitives from `#/components/utils/`
 - **Protected routes**: nest under `src/routes/_authed/`
 - **Auth guard pattern**: `getAuthSession()` in route `beforeLoad`; redirect to `/sign-in` if null
 - **Never** rely on client-side session state for authorization
@@ -124,7 +124,7 @@ Storybook runs on port 6006 (`pnpm storybook`). Stories live in `src/stories/`.
 - `"use client"` directives in shadcn components are no-ops in TanStack Start — remove them when touching a file
 
 ### UI component conventions
-- All files in `src/components/ui/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
+- All files in `src/components/utils/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
 - Exported function names match the filename exactly (e.g. `TextArea`, not `Textarea`)
 - When renaming a component file: grep for all imports and update them in the same step
 
@@ -142,7 +142,7 @@ Every story file should include:
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
 
 const meta = {
-  title: 'UI/ComponentName',
+  title: 'Utils/ComponentName', // use Utils/ for components in src/components/utils/
   component: ComponentName,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

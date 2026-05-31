@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { Button } from '#/components/ui/Button'
+import { Button } from '#/components/utils/Button'
 
 const meta = {
-  title: 'UI/Button',
+  title: 'Utils/Button',
   component: Button,
   tags: ['autodocs'],
   argTypes: {

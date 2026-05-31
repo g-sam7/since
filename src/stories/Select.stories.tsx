@@ -8,11 +8,11 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from '#/components/ui/Select'
-import { Label } from '#/components/ui/Label'
+} from '#/components/utils/Select'
+import { Label } from '#/components/utils/Label'
 
 const meta = {
-  title: 'UI/Select',
+  title: 'Utils/Select',
   component: Select,
   tags: ['autodocs'],
   parameters: {

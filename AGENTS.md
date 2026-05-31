@@ -31,7 +31,7 @@ Infrastructure direction:
 
 ## Repository Conventions
 - Preferred import alias: `#/*` -> `src/*` (prefer over `@/*`)
-- UI primitives from `#/components/ui/`
+- UI primitives from `#/components/utils/`
 - `cn()` helper from `#/lib/utils`
 - File-based routes under `src/routes/`
 - Do not edit generated files:
@@ -108,7 +108,7 @@ Setup facts:
 - Global styles are imported in `.storybook/preview.tsx` via `import '../src/styles.css'`
 
 UI component conventions:
-- All files in `src/components/ui/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
+- All files in `src/components/utils/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
 - Exported function names match the filename exactly (e.g. `TextArea`, not `Textarea`)
 
 Every story file should include:
@@ -120,6 +120,7 @@ Every story file should include:
 
 Story file conventions:
 - Import type from `@storybook/tanstack-react`
+- Story titles: use `Utils/ComponentName` for components in `src/components/utils/`; use a bare name or feature path for everything else
 - Use `parameters: { layout: 'centered' }` for all UI component stories
 - Use a `decorators` width wrapper (`w-80` or `w-96`) so stories aren't edge-to-edge
 - Override the decorator per-story when a story needs different dimensions

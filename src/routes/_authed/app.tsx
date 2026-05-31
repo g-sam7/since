@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { Button } from '#/components/ui/Button'
+import { Button } from '#/components/utils/Button'
 
 export const Route = createFileRoute('/_authed/app')({
   component: AppPage,

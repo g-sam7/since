@@ -51,7 +51,7 @@ Derived state (`last_completed_at`, `next_due_at`, overdue status) is **computed
 ```txt
 src/
 ├── components/          # Shared UI components
-│   └── ui/              # shadcn/ui primitives
+│   └── utils/           # shadcn/ui primitives
 ├── db/
 │   ├── index.ts         # Database connection
 │   ├── schema.ts        # Drizzle schema entrypoint
@@ -83,7 +83,7 @@ src/
 
 - **Path alias**: `#/*` maps to `src/*` (primary). `@/*` also works but prefer `#/`.
 - **Routing**: File-based under `src/routes/`. Route tree is auto-generated — never edit `routeTree.gen.ts`.
-- **UI primitives**: Use shadcn components from `#/components/ui/`.
+- **UI primitives**: Use shadcn components from `#/components/utils/`.
 - **className merging**: Use `cn()` from `#/lib/utils`.
 - **Styling**: Tailwind v4 with CSS custom properties. See `src/styles.css` for current design tokens (palette is not finalized).
 - **Database**: PostgreSQL via Drizzle. Schema in `src/db/schema.ts`, config in `drizzle.config.ts`. Connection configured via environment variables.
@@ -194,7 +194,7 @@ Storybook runs on port 6006 (`pnpm storybook`). Stories live in `src/stories/`.
 
 ### UI component conventions
 
-- All files in `src/components/ui/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
+- All files in `src/components/utils/` use PascalCase (e.g. `Button.tsx`, `Card.tsx`, `TextArea.tsx`)
 - Exported function names match the filename exactly (e.g. `TextArea`, not `Textarea`)
 
 ### Story structure
@@ -213,7 +213,7 @@ Every story file should include:
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
 
 const meta = {
-  title: 'UI/ComponentName',
+  title: 'Utils/ComponentName', // use Utils/ for components in src/components/utils/
   component: ComponentName,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

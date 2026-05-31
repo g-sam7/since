@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { Slider } from '#/components/ui/Slider'
-import { Label } from '#/components/ui/Label'
+import { Slider } from '#/components/utils/Slider'
+import { Label } from '#/components/utils/Label'
 
 const meta = {
-  title: 'UI/Slider',
+  title: 'Utils/Slider',
   component: Slider,
   tags: ['autodocs'],
   parameters: {

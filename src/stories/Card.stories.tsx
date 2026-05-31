@@ -7,11 +7,11 @@ import {
   CardAction,
   CardContent,
   CardFooter,
-} from '#/components/ui/Card'
-import { Button } from '#/components/ui/Button'
+} from '#/components/utils/Card'
+import { Button } from '#/components/utils/Button'
 
 const meta = {
-  title: 'UI/Card',
+  title: 'Utils/Card',
   component: Card,
   tags: ['autodocs'],
   parameters: {

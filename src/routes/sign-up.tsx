@@ -1,7 +1,7 @@
 import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { Button } from '#/components/ui/Button'
+import { Button } from '#/components/utils/Button'
 import {
   Card,
   CardContent,
@@ -9,9 +9,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '#/components/ui/Card'
-import { Input } from '#/components/ui/Input'
-import { Label } from '#/components/ui/Label'
+} from '#/components/utils/Card'
+import { Input } from '#/components/utils/Input'
+import { Label } from '#/components/utils/Label'
 import { authClient } from '#/lib/auth-client'
 import { getAuthSession } from '#/lib/auth-session'
 

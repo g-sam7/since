@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Button } from '#/components/ui/Button'
+import { Button } from '#/components/utils/Button'
 
 type ThemeMode = 'light' | 'dark' | 'auto'
 

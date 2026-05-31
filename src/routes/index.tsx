@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
-import { Button } from '#/components/ui/Button'
+import { Button } from '#/components/utils/Button'
 
 export const Route = createFileRoute('/')({ component: App })
 

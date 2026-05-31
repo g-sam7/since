@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { TextArea } from '#/components/ui/TextArea'
-import { Label } from '#/components/ui/Label'
-import { Button } from '#/components/ui/Button'
+import { TextArea } from '#/components/utils/TextArea'
+import { Label } from '#/components/utils/Label'
+import { Button } from '#/components/utils/Button'
 
 const meta = {
-  title: 'UI/TextArea',
+  title: 'Utils/TextArea',
   component: TextArea,
   tags: ['autodocs'],
   parameters: {
