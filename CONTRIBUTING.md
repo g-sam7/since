@@ -49,14 +49,21 @@ Users see tasks as overdue, due soon, or recently completed. This is **not** a t
 ## Commands
 
 ```sh
-pnpm dev              # Start dev server (port 3000)
-pnpm build            # Production build
-pnpm test             # Run vitest
-pnpm lint             # ESLint check
-pnpm check            # Prettier write + ESLint fix
+pnpm dev              # Start PostgreSQL, run migrations, and start Vite (port 3000)
+pnpm dev:app          # Start only Vite (port 3000)
+pnpm dev:db           # Start only PostgreSQL
+pnpm build            # Build the production app
+pnpm preview          # Preview the production build
+pnpm test             # Run Vitest
+pnpm lint             # Check with ESLint
+pnpm format           # Check formatting with Prettier
+pnpm check            # Write Prettier changes and apply ESLint fixes
 pnpm db:generate      # Generate Drizzle migrations
 pnpm db:migrate       # Run migrations
+pnpm db:pull          # Introspect the database schema
 pnpm db:studio        # Open Drizzle Studio
+pnpm storybook        # Start Storybook (port 6006)
+pnpm build-storybook  # Build static Storybook
 # db:push is disabled — always use db:generate + db:migrate
 ```
 
