@@ -1,5 +1,5 @@
 {
-  "id": "47c9d40e-aec2-46bb-8741-d24afcad06a2",
+  "id": "e5d18f2d-3bec-4fd5-81b0-d4364acf97a4",
   "prevId": "f626bfae-cb53-44ef-9ac4-1711e966eaad",
   "version": "7",
   "dialect": "postgresql",
@@ -380,7 +380,7 @@
           "name": "created_by_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "name": {
           "name": "name",
@@ -502,7 +502,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -538,7 +538,7 @@
           "name": "completed_by_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "completed_at": {
           "name": "completed_at",
@@ -602,7 +602,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },

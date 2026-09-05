@@ -17,6 +17,11 @@ import { user } from './auth-schema'
 // workspaces (multiple members viewing, creating, editing, and deleting the
 // same task list) can be added later without migrating task ownership. Every
 // user gets a personal workspace on sign-up; see `createPersonalWorkspace`.
+//
+// "Created by" and "completed by" are display information, so those foreign
+// keys set null when the user is deleted rather than removing the rows. The
+// workspace creator still cascades because every workspace is personal today;
+// the shared-workspace story should replace that with ownership transfer.
 
 export const workspaceMemberRole = pgEnum('workspace_member_role', [
   'owner',
@@ -78,9 +83,9 @@ export const task = pgTable(
     workspaceId: uuid('workspace_id')
       .notNull()
       .references(() => workspace.id, { onDelete: 'cascade' }),
-    createdById: text('created_by_id')
-      .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+    createdById: text('created_by_id').references(() => user.id, {
+      onDelete: 'set null',
+    }),
     name: text('name').notNull(),
     description: text('description'),
     notes: text('notes'),
@@ -110,9 +115,9 @@ export const taskCompletion = pgTable(
     taskId: uuid('task_id')
       .notNull()
       .references(() => task.id, { onDelete: 'cascade' }),
-    completedById: text('completed_by_id')
-      .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+    completedById: text('completed_by_id').references(() => user.id, {
+      onDelete: 'set null',
+    }),
     completedAt: timestamp('completed_at', { withTimezone: true })
       .defaultNow()
       .notNull(),

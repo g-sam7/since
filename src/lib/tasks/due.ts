@@ -21,16 +21,15 @@ export function addInterval(
   count: number,
   unit: IntervalUnit,
 ): Date {
-  const result = new Date(date.getTime())
   switch (unit) {
     case 'day':
-      return new Date(result.getTime() + count * DAY_MS)
+      return new Date(date.getTime() + count * DAY_MS)
     case 'week':
-      return new Date(result.getTime() + count * 7 * DAY_MS)
+      return new Date(date.getTime() + count * 7 * DAY_MS)
     case 'month':
-      return addUtcMonths(result, count)
+      return addUtcMonths(date, count)
     case 'year':
-      return addUtcMonths(result, count * 12)
+      return addUtcMonths(date, count * 12)
   }
 }
 
