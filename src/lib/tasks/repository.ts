@@ -67,8 +67,12 @@ export type TaskFields = Pick<
   'name' | 'description' | 'notes' | 'intervalCount' | 'intervalUnit'
 >
 
+// `createdById` is nullable in the schema only so the foreign key can set
+// null when the author is deleted. New tasks must always record an author.
 export type CreateTaskInput = TaskFields &
-  Pick<NewTask, 'workspaceId' | 'createdById' | 'lastCompletedAt'>
+  Pick<NewTask, 'workspaceId' | 'lastCompletedAt'> & {
+    createdById: string
+  }
 
 export async function createTask(values: CreateTaskInput): Promise<Task> {
   const [created] = await db.insert(task).values(values).returning()
