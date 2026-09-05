@@ -6,7 +6,7 @@ Track everyday recurring tasks — working out, changing air filters, car mainte
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v20+)
+- [Node.js](https://nodejs.org/) (v22.12+)
 - [pnpm](https://pnpm.io/) (`npm install -g pnpm`)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) or another Docker installation with Docker Compose v2
 
@@ -16,7 +16,7 @@ Track everyday recurring tasks — working out, changing air filters, car mainte
 # Install dependencies
 pnpm install
 
-# Create a local env file
+# Create a .env.local file in the repo root with:
 # DATABASE_URL=postgresql://postgres:postgres@localhost:5432/since
 # BETTER_AUTH_SECRET=replace-this-with-at-least-32-characters
 
@@ -45,3 +45,6 @@ pnpm dev:db
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) v4 + [shadcn/ui](https://ui.shadcn.com/)
 - **Testing**: [Vitest](https://vitest.dev/)
 
+## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full command list, architecture, and coding conventions.
