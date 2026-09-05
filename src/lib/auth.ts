@@ -5,6 +5,7 @@ import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { db } from '#/db/index'
 import * as authSchema from '#/db/auth-schema'
 import { env } from '#/env'
+import { createPersonalWorkspace } from '#/lib/tasks/repository'
 
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
@@ -14,6 +15,15 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await createPersonalWorkspace(user.id)
+        },
+      },
+    },
   },
   plugins: [tanstackStartCookies()],
 })

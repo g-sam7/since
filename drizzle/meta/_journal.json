@@ -8,6 +8,13 @@
       "when": 1774824610951,
       "tag": "0000_numerous_lightspeed",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788639798762,
+      "tag": "0001_fancy_puma",
+      "breakpoints": true
     }
   ]
 }
