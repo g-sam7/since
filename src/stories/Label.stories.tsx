@@ -47,7 +47,12 @@ export const WithRequiredMarker: Story = {
 export const PeerDisabled: Story = {
   render: () => (
     <div className="space-y-1.5">
-      <Input id="disabled-peer" disabled placeholder="Disabled" className="peer" />
+      <Input
+        id="disabled-peer"
+        disabled
+        placeholder="Disabled"
+        className="peer"
+      />
       <Label htmlFor="disabled-peer">
         This label dims when its input is disabled (peer-disabled)
       </Label>

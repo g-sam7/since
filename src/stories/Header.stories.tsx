@@ -14,10 +14,12 @@ import { authClient } from '#/lib/auth-client'
 let authState: 'signed-out' | 'loading' | 'signed-in' = 'signed-out'
 
 function configureAuthClient() {
-  ;(authClient as unknown as {
-    useSession: () => { data: unknown; isPending: boolean }
-    signOut: () => Promise<void>
-  }).useSession = () => {
+  ;(
+    authClient as unknown as {
+      useSession: () => { data: unknown; isPending: boolean }
+      signOut: () => Promise<void>
+    }
+  ).useSession = () => {
     if (authState === 'loading') {
       return { data: null, isPending: true }
     }
@@ -36,8 +38,8 @@ function configureAuthClient() {
 
     return { data: null, isPending: false }
   }
-
-  ;(authClient as unknown as { signOut: () => Promise<void> }).signOut = async () => {}
+  ;(authClient as unknown as { signOut: () => Promise<void> }).signOut =
+    async () => {}
 }
 
 function createStoryRouter(content?: ReactNode) {
@@ -50,9 +52,21 @@ function createStoryRouter(content?: ReactNode) {
       </div>
     ),
   })
-  const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', component: () => null })
-  const signInRoute = createRoute({ getParentRoute: () => rootRoute, path: '/sign-in', component: () => null })
-  const appRoute = createRoute({ getParentRoute: () => rootRoute, path: '/app', component: () => null })
+  const indexRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/',
+    component: () => null,
+  })
+  const signInRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/sign-in',
+    component: () => null,
+  })
+  const appRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/app',
+    component: () => null,
+  })
   const routeTree = rootRoute.addChildren([indexRoute, signInRoute, appRoute])
 
   return createRouter({
@@ -121,12 +135,14 @@ export const InPageContext: Story = {
 
     return (
       <HeaderFrame
-        content={(
+        content={
           <main className="space-y-4 px-4 py-10">
-            <p className="text-sm text-muted-foreground font-mono">Page content</p>
+            <p className="text-sm text-muted-foreground font-mono">
+              Page content
+            </p>
             <div className="h-56 rounded-lg border border-dashed border-border bg-surface-subtle" />
           </main>
-        )}
+        }
       />
     )
   },

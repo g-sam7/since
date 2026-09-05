@@ -31,22 +31,22 @@ pnpm build-storybook  # Build static Storybook
 
 ## High-Level Architecture
 
-No floating dep ranges — pin all versions explicitly, especially @tanstack/*
+No floating dep ranges — pin all versions explicitly, especially @tanstack/\*
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | TanStack Start (React 19 + Vite + Server Functions) |
-| Language | TypeScript strict, ES2022 |
-| Database | PostgreSQL + Drizzle ORM |
-| Auth | Better Auth (email/password, session-based) |
-| Data fetching | TanStack Query |
-| Routing | TanStack Router (file-based) |
-| Forms | TanStack Form |
-| Tables | TanStack Table |
-| Styling | Tailwind CSS v4 + shadcn/ui (new-york, zinc) |
-| Env vars | T3Env (`@t3-oss/env-core`) + Zod |
-| Testing | Vitest + Storybook playtests |
-| Package manager | pnpm |
+| Layer           | Technology                                          |
+| --------------- | --------------------------------------------------- |
+| Framework       | TanStack Start (React 19 + Vite + Server Functions) |
+| Language        | TypeScript strict, ES2022                           |
+| Database        | PostgreSQL + Drizzle ORM                            |
+| Auth            | Better Auth (email/password, session-based)         |
+| Data fetching   | TanStack Query                                      |
+| Routing         | TanStack Router (file-based)                        |
+| Forms           | TanStack Form                                       |
+| Tables          | TanStack Table                                      |
+| Styling         | Tailwind CSS v4 + shadcn/ui (new-york, zinc)        |
+| Env vars        | T3Env (`@t3-oss/env-core`) + Zod                    |
+| Testing         | Vitest + Storybook playtests                        |
+| Package manager | pnpm                                                |
 
 ---
 
@@ -70,7 +70,6 @@ No floating dep ranges — pin all versions explicitly, especially @tanstack/*
 - **Story placement**: Component stories live in `src/stories/`. Stories for a utility or hook live alongside the module they test. Shared story fixtures and opt-in decorators belong in `src/test-utils/` — not in `.storybook/`, which sits outside the `src` tsconfig include and so loses path aliases and typechecking. Reserve `.storybook/preview.tsx` for global, always-on providers.
 - **Server-side testing**: Use Vitest (`*.test.ts`) for anything that runs on the server — domain logic, services, data access, and server functions.
 
-
 ## Agent Rules & Existing Policies
 
 - Follow repository ESLint config and import alias conventions
@@ -80,8 +79,6 @@ No floating dep ranges — pin all versions explicitly, especially @tanstack/*
 - **Stepwise operation**: When operating as an agent, do not attempt to complete complex tasks in one pass. This can lead to timeouts, context loss, and confusion. Instead, break it down into smaller steps and ask for confirmation before proceeding with each step. This ensures that the user is aligned with the approach and can provide feedback or adjustments as needed.
 - **Reviews**: When asked for a review, perform a fresh `fetch` and compare the current branch to `origin/main`, and use this file as a guide to provide feedback on code quality, adherence to conventions, and potential improvements. Focus on the overall architecture, component structure, and state management practices. If the code deviates from the conventions outlined here, suggest specific changes to align it with the project's standards. If operating as an agent, make minor or stylistic changes as needed, but do not attempt larger improvements without user confirmation.
 - **Codemods**: If a prompt may require touching many files (for example, reorganizing imports or changing common conventions), prefer and suggest implementing as a repeatable codemod script.
-
-
 
 ### Input Shortcuts
 

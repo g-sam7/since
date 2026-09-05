@@ -71,8 +71,12 @@ export const WithLabel: Story = {
 export const AutoGrows: Story = {
   render: () => (
     <div className="space-y-2">
-      <p className="text-xs text-muted-foreground font-mono">field-sizing-content — grows with content</p>
-      <TextArea defaultValue={'Line one\nLine two\nLine three\nLine four\nLine five'} />
+      <p className="text-xs text-muted-foreground font-mono">
+        field-sizing-content — grows with content
+      </p>
+      <TextArea
+        defaultValue={'Line one\nLine two\nLine three\nLine four\nLine five'}
+      />
     </div>
   ),
 }

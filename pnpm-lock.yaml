@@ -167,6 +167,9 @@ importers:
       dotenv:
         specifier: 17.4.2
         version: 17.4.2
+      eslint:
+        specifier: 10.1.0
+        version: 10.1.0(jiti@2.7.0)
       eslint-plugin-storybook:
         specifier: 10.4.4
         version: 10.4.4(eslint@10.1.0(jiti@2.7.0))(storybook@10.4.4(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@5.9.3)

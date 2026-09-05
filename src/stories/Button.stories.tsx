@@ -8,11 +8,27 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: [
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'ghost',
+        'link',
+      ],
     },
     size: {
       control: 'select',
-      options: ['default', 'xs', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg'],
+      options: [
+        'default',
+        'xs',
+        'sm',
+        'lg',
+        'icon',
+        'icon-xs',
+        'icon-sm',
+        'icon-lg',
+      ],
     },
     disabled: { control: 'boolean' },
     children: { control: 'text' },
@@ -58,16 +74,48 @@ export const IconSizes: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3 items-center">
       <Button size="icon-xs">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
       </Button>
       <Button size="icon-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
       </Button>
       <Button size="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
       </Button>
       <Button size="icon-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
       </Button>
     </div>
   ),
@@ -76,28 +124,47 @@ export const IconSizes: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3 items-center">
-      <Button variant="default" disabled>Default</Button>
-      <Button variant="destructive" disabled>Destructive</Button>
-      <Button variant="outline" disabled>Outline</Button>
-      <Button variant="secondary" disabled>Secondary</Button>
-      <Button variant="ghost" disabled>Ghost</Button>
-      <Button variant="link" disabled>Link</Button>
+      <Button variant="default" disabled>
+        Default
+      </Button>
+      <Button variant="destructive" disabled>
+        Destructive
+      </Button>
+      <Button variant="outline" disabled>
+        Outline
+      </Button>
+      <Button variant="secondary" disabled>
+        Secondary
+      </Button>
+      <Button variant="ghost" disabled>
+        Ghost
+      </Button>
+      <Button variant="link" disabled>
+        Link
+      </Button>
     </div>
   ),
 }
 
 export const AllPermutations: Story = {
   render: () => {
-    const variants = ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'] as const
+    const variants = [
+      'default',
+      'destructive',
+      'outline',
+      'secondary',
+      'ghost',
+      'link',
+    ] as const
     const sizes = ['xs', 'sm', 'default', 'lg'] as const
 
     return (
       <div className="space-y-6">
-        {variants.map(variant => (
+        {variants.map((variant) => (
           <div key={variant} className="space-y-2">
             <p className="text-xs text-muted-foreground font-mono">{variant}</p>
             <div className="flex flex-wrap gap-2 items-center">
-              {sizes.map(size => (
+              {sizes.map((size) => (
                 <Button key={size} variant={variant} size={size}>
                   {size}
                 </Button>

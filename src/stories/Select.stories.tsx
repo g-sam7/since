@@ -25,7 +25,14 @@ type Story = StoryObj<typeof meta>
 
 const fruits = ['Apple', 'Banana', 'Blueberry', 'Grapes', 'Pineapple']
 
-function BasicSelect({ size = 'default', ...props }: { size?: 'sm' | 'default'; disabled?: boolean; placeholder?: string }) {
+function BasicSelect({
+  size = 'default',
+  ...props
+}: {
+  size?: 'sm' | 'default'
+  disabled?: boolean
+  placeholder?: string
+}) {
   return (
     <Select {...props}>
       <SelectTrigger size={size} className="w-48">
@@ -33,7 +40,9 @@ function BasicSelect({ size = 'default', ...props }: { size?: 'sm' | 'default'; 
       </SelectTrigger>
       <SelectContent>
         {fruits.map((fruit) => (
-          <SelectItem key={fruit} value={fruit.toLowerCase()}>{fruit}</SelectItem>
+          <SelectItem key={fruit} value={fruit.toLowerCase()}>
+            {fruit}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
@@ -52,7 +61,9 @@ export const WithDefaultValue: Story = {
       </SelectTrigger>
       <SelectContent>
         {fruits.map((fruit) => (
-          <SelectItem key={fruit} value={fruit.toLowerCase()}>{fruit}</SelectItem>
+          <SelectItem key={fruit} value={fruit.toLowerCase()}>
+            {fruit}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
@@ -86,7 +97,9 @@ export const WithLabel: Story = {
         </SelectTrigger>
         <SelectContent>
           {fruits.map((fruit) => (
-            <SelectItem key={fruit} value={fruit.toLowerCase()}>{fruit}</SelectItem>
+            <SelectItem key={fruit} value={fruit.toLowerCase()}>
+              {fruit}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
@@ -145,7 +158,9 @@ export const Invalid: Story = {
       </SelectTrigger>
       <SelectContent>
         {fruits.map((fruit) => (
-          <SelectItem key={fruit} value={fruit.toLowerCase()}>{fruit}</SelectItem>
+          <SelectItem key={fruit} value={fruit.toLowerCase()}>
+            {fruit}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>

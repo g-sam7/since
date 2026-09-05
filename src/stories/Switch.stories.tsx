@@ -49,7 +49,10 @@ export const States: Story = {
         { label: 'Unchecked', props: {} },
         { label: 'Checked', props: { defaultChecked: true } },
         { label: 'Disabled unchecked', props: { disabled: true } },
-        { label: 'Disabled checked', props: { disabled: true, defaultChecked: true } },
+        {
+          label: 'Disabled checked',
+          props: { disabled: true, defaultChecked: true },
+        },
       ].map(({ label, props }) => (
         <div key={label} className="flex items-center gap-3">
           <Switch {...props} />
@@ -87,9 +90,24 @@ export const SettingsList: Story = {
   render: () => (
     <div className="w-80 space-y-4">
       {[
-        { id: 'push', label: 'Push notifications', description: 'Get notified on your device.', defaultChecked: true },
-        { id: 'email', label: 'Email digest', description: 'Weekly summary of your activity.', defaultChecked: false },
-        { id: 'sms', label: 'SMS alerts', description: 'Critical alerts via text message.', defaultChecked: false },
+        {
+          id: 'push',
+          label: 'Push notifications',
+          description: 'Get notified on your device.',
+          defaultChecked: true,
+        },
+        {
+          id: 'email',
+          label: 'Email digest',
+          description: 'Weekly summary of your activity.',
+          defaultChecked: false,
+        },
+        {
+          id: 'sms',
+          label: 'SMS alerts',
+          description: 'Critical alerts via text message.',
+          defaultChecked: false,
+        },
       ].map(({ id, label, description, defaultChecked }) => (
         <div key={id} className="flex items-start justify-between gap-4">
           <div className="space-y-0.5">

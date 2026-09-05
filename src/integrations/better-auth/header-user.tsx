@@ -16,11 +16,15 @@ export default function BetterAuthHeader() {
     return (
       <div className="flex items-center gap-2">
         {session.user.image ? (
-          <img src={session.user.image} alt="" className="h-8 w-8 rounded-full border border-border object-cover" />
+          <img
+            src={session.user.image}
+            alt=""
+            className="h-8 w-8 rounded-full border border-border object-cover"
+          />
         ) : (
           <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface-subtle">
             <span className="text-xs font-medium text-muted-foreground">
-              {session.user.name?.charAt(0).toUpperCase() || 'U'}
+              {session.user.name.charAt(0).toUpperCase() || 'U'}
             </span>
           </div>
         )}
@@ -44,7 +48,12 @@ export default function BetterAuthHeader() {
   }
 
   return (
-    <Button asChild variant="outline" size="sm" className="rounded-full bg-surface-subtle px-4">
+    <Button
+      asChild
+      variant="outline"
+      size="sm"
+      className="rounded-full bg-surface-subtle px-4"
+    >
       <Link to="/sign-in">Sign in</Link>
     </Button>
   )

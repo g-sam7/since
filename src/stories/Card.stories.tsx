@@ -42,7 +42,9 @@ export const WithHeaderAndContent: Story = {
     <Card>
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
-        <CardDescription>A short description of what this card is about.</CardDescription>
+        <CardDescription>
+          A short description of what this card is about.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -58,13 +60,19 @@ export const WithAction: Story = {
     <Card>
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
-        <CardDescription>A short description of what this card is about.</CardDescription>
+        <CardDescription>
+          A short description of what this card is about.
+        </CardDescription>
         <CardAction>
-          <Button variant="outline" size="sm">Action</Button>
+          <Button variant="outline" size="sm">
+            Action
+          </Button>
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">Card body content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Card body content goes here.
+        </p>
       </CardContent>
     </Card>
   ),
@@ -75,10 +83,14 @@ export const WithFooter: Story = {
     <Card>
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
-        <CardDescription>A short description of what this card is about.</CardDescription>
+        <CardDescription>
+          A short description of what this card is about.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">Card body content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Card body content goes here.
+        </p>
       </CardContent>
       <CardFooter>
         <p className="text-xs text-muted-foreground">Footer note</p>
@@ -92,10 +104,14 @@ export const WithFooterActions: Story = {
     <Card>
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
-        <CardDescription>A short description of what this card is about.</CardDescription>
+        <CardDescription>
+          A short description of what this card is about.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">Card body content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Card body content goes here.
+        </p>
       </CardContent>
       <CardFooter className="justify-end gap-2">
         <Button variant="outline">Cancel</Button>
@@ -110,9 +126,13 @@ export const FullComposition: Story = {
     <Card>
       <CardHeader>
         <CardTitle>Full Card</CardTitle>
-        <CardDescription>Every sub-component composed together.</CardDescription>
+        <CardDescription>
+          Every sub-component composed together.
+        </CardDescription>
         <CardAction>
-          <Button variant="ghost" size="sm">Edit</Button>
+          <Button variant="ghost" size="sm">
+            Edit
+          </Button>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -140,43 +160,59 @@ export const AllCompositions: Story = {
   render: () => (
     <div className="space-y-4">
       {[
-        { label: 'Content only', node: (
-          <Card>
-            <CardContent>Content only.</CardContent>
-          </Card>
-        )},
-        { label: 'Header + Content', node: (
-          <Card>
-            <CardHeader>
-              <CardTitle>Title</CardTitle>
-              <CardDescription>Description</CardDescription>
-            </CardHeader>
-            <CardContent>Body content.</CardContent>
-          </Card>
-        )},
-        { label: 'Header + Action + Content', node: (
-          <Card>
-            <CardHeader>
-              <CardTitle>Title</CardTitle>
-              <CardDescription>Description</CardDescription>
-              <CardAction><Button size="sm" variant="outline">Action</Button></CardAction>
-            </CardHeader>
-            <CardContent>Body content.</CardContent>
-          </Card>
-        )},
-        { label: 'Header + Content + Footer', node: (
-          <Card>
-            <CardHeader>
-              <CardTitle>Title</CardTitle>
-              <CardDescription>Description</CardDescription>
-            </CardHeader>
-            <CardContent>Body content.</CardContent>
-            <CardFooter className="justify-end gap-2">
-              <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
-            </CardFooter>
-          </Card>
-        )},
+        {
+          label: 'Content only',
+          node: (
+            <Card>
+              <CardContent>Content only.</CardContent>
+            </Card>
+          ),
+        },
+        {
+          label: 'Header + Content',
+          node: (
+            <Card>
+              <CardHeader>
+                <CardTitle>Title</CardTitle>
+                <CardDescription>Description</CardDescription>
+              </CardHeader>
+              <CardContent>Body content.</CardContent>
+            </Card>
+          ),
+        },
+        {
+          label: 'Header + Action + Content',
+          node: (
+            <Card>
+              <CardHeader>
+                <CardTitle>Title</CardTitle>
+                <CardDescription>Description</CardDescription>
+                <CardAction>
+                  <Button size="sm" variant="outline">
+                    Action
+                  </Button>
+                </CardAction>
+              </CardHeader>
+              <CardContent>Body content.</CardContent>
+            </Card>
+          ),
+        },
+        {
+          label: 'Header + Content + Footer',
+          node: (
+            <Card>
+              <CardHeader>
+                <CardTitle>Title</CardTitle>
+                <CardDescription>Description</CardDescription>
+              </CardHeader>
+              <CardContent>Body content.</CardContent>
+              <CardFooter className="justify-end gap-2">
+                <Button variant="outline">Cancel</Button>
+                <Button>Save</Button>
+              </CardFooter>
+            </Card>
+          ),
+        },
       ].map(({ label, node }) => (
         <div key={label} className="space-y-1">
           <p className="text-xs text-muted-foreground font-mono">{label}</p>

@@ -10,7 +10,8 @@ function App() {
     <main className="page-wrap flex min-h-[60vh] flex-col items-center justify-center px-4 py-14 text-center">
       <SinceTicker />
       <p className="mb-8 max-w-md text-base text-muted-foreground">
-        Time flies. Stay on top of the things that matter. You might be surprised just how long it's been.
+        Time flies. Stay on top of the things that matter. You might be
+        surprised just how long it's been.
       </p>
       <div className="flex flex-wrap justify-center gap-3">
         <Button

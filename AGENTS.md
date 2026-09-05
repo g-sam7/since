@@ -5,6 +5,7 @@
 ## Codex Execution Guidance
 
 When implementing tasks in this repo:
+
 - Preserve existing architecture and naming patterns
 - Before editing, inspect nearby files for established patterns and follow them
 - Prefer minimal diffs that satisfy the requirement

@@ -1,4 +1,9 @@
-import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { Button } from '#/components/utils/Button'
@@ -63,9 +68,7 @@ function SignUp() {
       <Card className="w-full max-w-sm border-border/80 shadow-[0_18px_40px_var(--shadow-color)]">
         <CardHeader>
           <CardTitle className="text-2xl">Create your account</CardTitle>
-          <CardDescription>
-            Get started with Since
-          </CardDescription>
+          <CardDescription>Get started with Since</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="flex flex-col gap-4">
