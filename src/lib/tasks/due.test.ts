@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest'
 import {
   addInterval,
   compareByNextDue,
+  formatDueIn,
+  formatTaskElapsed,
   getDueStatus,
   getNextDueAt,
 } from './due'
@@ -98,5 +100,39 @@ describe('compareByNextDue', () => {
       intervalUnit: 'year' as const,
     }
     expect([later, soon].sort(compareByNextDue)).toEqual([soon, later])
+  })
+})
+
+describe('formatTaskElapsed', () => {
+  it('measures from creation when never completed', () => {
+    expect(formatTaskElapsed(baseTask, at('2026-03-01T00:00:00Z'))).toBe(
+      '2 months',
+    )
+  })
+
+  it('measures from the last completion once completed', () => {
+    expect(
+      formatTaskElapsed(
+        { ...baseTask, lastCompletedAt: at('2026-02-20T00:00:00Z') },
+        at('2026-03-01T00:00:00Z'),
+      ),
+    ).toBe('9 days')
+  })
+})
+
+describe('formatDueIn', () => {
+  const task = {
+    ...baseTask,
+    intervalCount: 7,
+    intervalUnit: 'day' as const,
+    lastCompletedAt: at('2026-06-01T00:00:00Z'),
+  }
+
+  it('describes upcoming due dates with "in"', () => {
+    expect(formatDueIn(task, at('2026-06-03T00:00:00Z'))).toBe('in 5 days')
+  })
+
+  it('describes overdue tasks with "ago"', () => {
+    expect(formatDueIn(task, at('2026-06-10T00:00:00Z'))).toBe('2 days ago')
   })
 })
