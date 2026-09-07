@@ -1,34 +1,9 @@
-import type { ReactNode } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 
-let context:
-  | {
-      queryClient: QueryClient
-    }
-  | undefined
-
+// A fresh client per call. `getRouter` runs once per request on the server,
+// so a module-level singleton would share one cache across every user's
+// request and let `ensureQueryData` serve one user's data to another. The
+// `QueryClientProvider` is installed by `setupRouterSsrQueryIntegration`.
 export function getContext() {
-  if (context) {
-    return context
-  }
-
-  const queryClient = new QueryClient()
-
-  context = {
-    queryClient,
-  }
-
-  return context
-}
-
-export default function TanStackQueryProvider({
-  children,
-}: {
-  children: ReactNode
-}) {
-  const { queryClient } = getContext()
-
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  )
+  return { queryClient: new QueryClient() }
 }

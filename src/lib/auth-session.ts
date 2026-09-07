@@ -1,17 +1,16 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getRequest } from '@tanstack/react-start/server'
+import { getRequestHeaders } from '@tanstack/react-start/server'
 
 import { auth } from './auth'
 
-// TODO: Refactor to a plain async helper that accepts Request directly,
-// removing the implicit getRequest() dependency. Update route guards to
-// pass the request from beforeLoad({ request }).
-
+// Stays a server function rather than a plain helper: route `beforeLoad`
+// runs on the client after hydration, so the request is only reachable here.
+// Server functions that need the session should use `authMiddleware` instead
+// of calling this.
 export const getAuthSession = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const request = getRequest()
     const session = await auth.api.getSession({
-      headers: request.headers,
+      headers: getRequestHeaders(),
     })
     return session
   },

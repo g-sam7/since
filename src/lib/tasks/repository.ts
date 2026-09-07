@@ -1,7 +1,13 @@
 import { and, asc, eq, isNull, sql } from 'drizzle-orm'
 
 import { db } from '#/db/index'
-import { task, taskCompletion, workspace, workspaceMember } from '#/db/schema'
+import {
+  task,
+  taskCompletion,
+  user,
+  workspace,
+  workspaceMember,
+} from '#/db/schema'
 import type { NewTask, Task, Workspace } from '#/db/task-schema'
 import { compareByNextDue } from './due'
 
@@ -53,13 +59,28 @@ export async function listWorkspacesForUser(
   return rows.map((row) => row.workspace)
 }
 
-/** Active (non-archived) tasks in a workspace, soonest due first. */
-export async function listActiveTasks(workspaceId: string): Promise<Task[]> {
+/** A task row joined with its creator's display name. */
+export type TaskWithCreator = Task & {
+  /** Null when the creator's account has been deleted. */
+  createdByName: string | null
+}
+
+/**
+ * Active (non-archived) tasks in a workspace with their creator's name,
+ * soonest due first. The join is a left join because `createdById` is set
+ * null when the creator's account is deleted.
+ */
+export async function listActiveTasks(
+  workspaceId: string,
+): Promise<TaskWithCreator[]> {
   const rows = await db
-    .select()
+    .select({ task, createdByName: user.name })
     .from(task)
+    .leftJoin(user, eq(task.createdById, user.id))
     .where(and(eq(task.workspaceId, workspaceId), isNull(task.archivedAt)))
-  return rows.sort(compareByNextDue)
+  return rows
+    .map((row) => ({ ...row.task, createdByName: row.createdByName }))
+    .sort(compareByNextDue)
 }
 
 export type TaskFields = Pick<

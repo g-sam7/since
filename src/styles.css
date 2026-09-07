@@ -191,10 +191,13 @@
   --color-action-border: var(--action-border);
   --color-state-ok: var(--state-ok);
   --color-state-ok-soft: var(--state-ok-soft);
+  --color-state-ok-border: var(--state-ok-border);
   --color-state-warning: var(--state-warning);
   --color-state-warning-soft: var(--state-warning-soft);
+  --color-state-warning-border: var(--state-warning-border);
   --color-state-danger: var(--state-danger);
   --color-state-danger-soft: var(--state-danger-soft);
+  --color-state-danger-border: var(--state-danger-border);
   --color-state-complete: var(--state-complete);
   --color-state-complete-soft: var(--state-complete-soft);
   --color-state-info: var(--state-info);
