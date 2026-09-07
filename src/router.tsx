@@ -18,7 +18,9 @@ export function getRouter() {
   })
 
   // Dehydrates queries fetched in loaders during SSR and rehydrates them on
-  // the client, so `useSuspenseQuery` never refetches on first render.
+  // the client, so `useSuspenseQuery` has data on first render and neither
+  // suspends nor shows a loading state. Whether it then refetches in the
+  // background is governed by each query's `staleTime`.
   setupRouterSsrQueryIntegration({ router, queryClient })
 
   return router

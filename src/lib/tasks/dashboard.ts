@@ -1,12 +1,10 @@
-import type { Task } from '#/db/task-schema'
 import type { DueStatus } from './due'
 import { getDueStatus, getNextDueAt } from './due'
+// Type-only import: erased at compile time, so this module stays safe to
+// import from client code even though the repository touches the database.
+import type { TaskWithCreator } from './repository'
 
-/** A task row joined with its creator's display name. */
-export type TaskWithCreator = Task & {
-  /** Null when the creator's account has been deleted. */
-  createdByName: string | null
-}
+export type { TaskWithCreator }
 
 /** What the dashboard renders: a task decorated with its computed due info. */
 export type DashboardTask = TaskWithCreator & {

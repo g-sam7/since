@@ -13,6 +13,8 @@ export const authMiddleware = createMiddleware({ type: 'function' }).server(
       headers: getRequestHeaders(),
     })
     if (!session) {
+      // TODO(sc-41): a plain error surfaces as a 500. Once mutations call
+      // this without a route guard in front, throw a 401 response instead.
       throw new Error('Unauthorized')
     }
     return next({ context: { session } })

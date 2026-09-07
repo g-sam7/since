@@ -29,6 +29,8 @@ const DUE_STATUS_VARIANT: Record<DueStatus, 'danger' | 'warning' | 'ok'> = {
 
 // Dates are formatted in UTC so the server render and the client hydration
 // agree regardless of the browser's zone; the due helpers already work in UTC.
+// Known limitation: users west of UTC can see the next calendar day for a
+// task due late in their evening. Revisit when dates become editable (sc-41).
 function formatDate(date: Date): string {
   return format(new UTCDate(date), 'MMM d, yyyy')
 }

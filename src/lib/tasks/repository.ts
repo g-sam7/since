@@ -9,7 +9,6 @@ import {
   workspaceMember,
 } from '#/db/schema'
 import type { NewTask, Task, Workspace } from '#/db/task-schema'
-import type { TaskWithCreator } from './dashboard'
 import { compareByNextDue } from './due'
 
 // Server-only data access for tasks. These helpers use the core query builder
@@ -58,6 +57,12 @@ export async function listWorkspacesForUser(
     .where(eq(workspaceMember.userId, userId))
     .orderBy(asc(workspace.createdAt))
   return rows.map((row) => row.workspace)
+}
+
+/** A task row joined with its creator's display name. */
+export type TaskWithCreator = Task & {
+  /** Null when the creator's account has been deleted. */
+  createdByName: string | null
 }
 
 /**

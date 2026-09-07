@@ -11,10 +11,11 @@ const badgeVariants = cva(
       variant: {
         default: 'border-action-border bg-action-soft text-primary',
         neutral: 'border-border bg-surface-subtle text-muted-foreground',
-        ok: 'border-state-ok/30 bg-state-ok-soft text-state-ok',
+        ok: 'border-state-ok-border bg-state-ok-soft text-state-ok',
         warning:
-          'border-state-warning/30 bg-state-warning-soft text-state-warning',
-        danger: 'border-state-danger/30 bg-state-danger-soft text-state-danger',
+          'border-state-warning-border bg-state-warning-soft text-state-warning',
+        danger:
+          'border-state-danger-border bg-state-danger-soft text-state-danger',
       },
     },
     defaultVariants: {
