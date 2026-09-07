@@ -42,7 +42,7 @@ export type TaskCardProps = {
 // Purely presentational so stories can render it with fixture data.
 export function TaskCard({ task, now = new Date() }: TaskCardProps) {
   return (
-    <Card data-testid="task-card" className="island-shell gap-4 py-5">
+    <Card data-testid="task-card" className="gap-4 py-5">
       <CardHeader className="gap-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <CardTitle className="text-lg leading-snug">{task.name}</CardTitle>
