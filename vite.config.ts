@@ -25,6 +25,11 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  optimizeDeps: {
+    // Only reached through the lazily loaded task form, so Vite would find it
+    // mid-session and re-bundle deps, loading a second copy of React.
+    include: ['@tanstack/react-form'],
+  },
   test: {
     projects: [
       {
