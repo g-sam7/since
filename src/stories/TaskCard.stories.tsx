@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { expect, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { TaskCard } from '#/components/TaskCard'
 import {
@@ -20,6 +20,7 @@ const meta = {
   },
   args: {
     now: FIXTURE_NOW,
+    onEdit: fn(),
   },
   decorators: [
     (Story) => (
@@ -51,6 +52,31 @@ export const Overdue: Story = {
     await expect(canvas.getByText(/MERV 11/)).toBeVisible()
     await expect(canvas.getByText(/^Due 1 month ago/)).toBeVisible()
     await expect(canvas.getByText(/Created Jun 1, 2026 by Sam/)).toBeVisible()
+  },
+}
+
+export const Edit: Story = {
+  args: { task: overdueTask },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Edit Change the air filter' }),
+    )
+    await expect(args.onEdit).toHaveBeenCalledOnce()
+  },
+}
+
+export const Highlighted: Story = {
+  args: { task: overdueTask, highlighted: true },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getByTestId('task-card')).toHaveAttribute(
+      'data-highlighted',
+    )
+    // Keyboard and screen reader users land on the saved card.
+    await expect(
+      canvas.getByRole('button', { name: 'Edit Change the air filter' }),
+    ).toHaveFocus()
   },
 }
 

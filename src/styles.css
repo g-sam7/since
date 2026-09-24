@@ -216,6 +216,21 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  /* Marks a just-saved task card, then fades away (`animate-highlight-fade`). */
+  --animate-highlight-fade: highlight-fade 2.5s ease-out forwards;
+
+  @keyframes highlight-fade {
+    0%,
+    40% {
+      outline-color: var(--color-primary);
+    }
+    100% {
+      outline-color: transparent;
+    }
+  }
+}
+
 html,
 body,
 #app {
