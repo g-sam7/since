@@ -1,3 +1,5 @@
+import { useHydrated } from '@tanstack/react-router'
+import { PlusIcon } from 'lucide-react'
 import { useState } from 'react'
 
 import { TaskCard } from '#/components/TaskCard'
@@ -10,13 +12,22 @@ export type TaskDashboardProps = {
   tasks: DashboardTask[]
   /** Reference time for elapsed and due copy; defaults to now. */
   now?: Date
+  onCreate: () => void
+  onEdit: (task: DashboardTask) => void
 }
 
 // Purely presentational so stories can render the empty and populated states.
-export function TaskDashboard({ tasks, now = new Date() }: TaskDashboardProps) {
+export function TaskDashboard({
+  tasks,
+  now = new Date(),
+  onCreate,
+  onEdit,
+}: TaskDashboardProps) {
   // The top fade only appears once the list has scrolled, so the cards look
   // untouched in their resting state.
   const [isScrolled, setIsScrolled] = useState(false)
+  // Creating needs JavaScript, so the button stays disabled until hydration.
+  const hydrated = useHydrated()
 
   if (tasks.length === 0) {
     return (
@@ -28,8 +39,9 @@ export function TaskDashboard({ tasks, now = new Date() }: TaskDashboardProps) {
           <p className="mb-6 text-base text-muted-foreground">
             You don&apos;t have any tracked tasks yet.
           </p>
-          {/* Enabled by sc-41 (create/edit). */}
-          <Button disabled>Create your first task</Button>
+          <Button disabled={!hydrated} onClick={onCreate}>
+            Create your first task
+          </Button>
         </div>
       </main>
     )
@@ -40,9 +52,19 @@ export function TaskDashboard({ tasks, now = new Date() }: TaskDashboardProps) {
     // line up with the header's logo and theme toggle.
     <main className="px-4 py-10">
       <div className="page-wrap flex flex-col items-center">
-        <h1 className="display-title mb-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Your tasks
-        </h1>
+        <div className="mb-6 flex w-full items-center justify-center gap-3">
+          <h1 className="display-title text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Your tasks
+          </h1>
+          <Button
+            size="icon"
+            aria-label="New task"
+            disabled={!hydrated}
+            onClick={onCreate}
+          >
+            <PlusIcon />
+          </Button>
+        </div>
         <ul
           aria-label="Tasks"
           onScroll={(event) => setIsScrolled(event.currentTarget.scrollTop > 0)}
@@ -57,7 +79,7 @@ export function TaskDashboard({ tasks, now = new Date() }: TaskDashboardProps) {
         >
           {tasks.map((task) => (
             <li key={task.id}>
-              <TaskCard task={task} now={now} />
+              <TaskCard task={task} now={now} onEdit={() => onEdit(task)} />
             </li>
           ))}
         </ul>

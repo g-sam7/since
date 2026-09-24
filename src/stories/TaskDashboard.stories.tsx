@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
-import { expect, within } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { TaskDashboard } from '#/components/TaskDashboard'
-import { FIXTURE_NOW, dashboardTasks } from '#/test-utils/tasks'
+import { FIXTURE_NOW, dashboardTasks, dueSoonTask } from '#/test-utils/tasks'
 
 const meta = {
   title: 'Tasks/TaskDashboard',
@@ -13,6 +13,8 @@ const meta = {
   },
   args: {
     now: FIXTURE_NOW,
+    onCreate: fn(),
+    onEdit: fn(),
   },
 } satisfies Meta<typeof TaskDashboard>
 
@@ -21,15 +23,20 @@ type Story = StoryObj<typeof meta>
 
 export const Empty: Story = {
   args: { tasks: [] },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(canvas.getByText('Welcome back')).toBeVisible()
     await expect(
       canvas.getByText("You don't have any tracked tasks yet."),
     ).toBeVisible()
-    await expect(
+    await userEvent.click(
       canvas.getByRole('button', { name: 'Create your first task' }),
-    ).toBeDisabled()
+    )
+    await expect(args.onCreate).toHaveBeenCalledOnce()
+    // The heading's "New task" action is only on the populated dashboard.
+    await expect(
+      canvas.queryByRole('button', { name: 'New task' }),
+    ).not.toBeInTheDocument()
   },
 }
 
@@ -51,5 +58,19 @@ export const Populated: Story = {
       'upcoming',
       'upcoming',
     ])
+  },
+}
+
+export const CreateAndEditActions: Story = {
+  args: { tasks: dashboardTasks },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'New task' }))
+    await expect(args.onCreate).toHaveBeenCalledOnce()
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Edit Water the plants' }),
+    )
+    await expect(args.onEdit).toHaveBeenCalledOnce()
+    await expect(args.onEdit).toHaveBeenCalledWith(dueSoonTask)
   },
 }

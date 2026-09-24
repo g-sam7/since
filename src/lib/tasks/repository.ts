@@ -95,9 +95,22 @@ export type CreateTaskInput = TaskFields &
     createdById: string
   }
 
+/**
+ * Creates a task. A `lastCompletedAt` is also recorded as a completion by the
+ * creator so the completion history agrees with the denormalised column.
+ */
 export async function createTask(values: CreateTaskInput): Promise<Task> {
-  const [created] = await db.insert(task).values(values).returning()
-  return created
+  return db.transaction(async (tx) => {
+    const [created] = await tx.insert(task).values(values).returning()
+    if (values.lastCompletedAt) {
+      await tx.insert(taskCompletion).values({
+        taskId: created.id,
+        completedById: values.createdById,
+        completedAt: values.lastCompletedAt,
+      })
+    }
+    return created
+  })
 }
 
 export async function updateTask(

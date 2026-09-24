@@ -1,7 +1,10 @@
 import { UTCDate } from '@date-fns/utc'
+import { useHydrated } from '@tanstack/react-router'
 import { format } from 'date-fns'
+import { PencilIcon } from 'lucide-react'
 
 import { Badge } from '#/components/utils/Badge'
+import { Button } from '#/components/utils/Button'
 import {
   Card,
   CardContent,
@@ -30,7 +33,8 @@ const DUE_STATUS_VARIANT: Record<DueStatus, 'danger' | 'warning' | 'ok'> = {
 // Dates are formatted in UTC so the server render and the client hydration
 // agree regardless of the browser's zone; the due helpers already work in UTC.
 // Known limitation: users west of UTC can see the next calendar day for a
-// task due late in their evening. Revisit when dates become editable (sc-41).
+// task due late in their evening. The create form stores "last done on" as
+// midnight UTC, so a picked date always displays as the day picked.
 function formatDate(date: Date): string {
   return format(new UTCDate(date), 'MMM d, yyyy')
 }
@@ -39,21 +43,35 @@ export type TaskCardProps = {
   task: DashboardTask
   /** Reference time for elapsed and due copy; defaults to now. */
   now?: Date
+  onEdit: () => void
 }
 
 // Purely presentational so stories can render it with fixture data.
-export function TaskCard({ task, now = new Date() }: TaskCardProps) {
+export function TaskCard({ task, now = new Date(), onEdit }: TaskCardProps) {
+  // Editing needs JavaScript, so the button stays disabled until hydration.
+  const hydrated = useHydrated()
   return (
     <Card data-testid="task-card" className="gap-4 py-5">
       <CardHeader className="gap-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <CardTitle className="text-lg leading-snug">{task.name}</CardTitle>
-          <Badge
-            variant={DUE_STATUS_VARIANT[task.dueStatus]}
-            data-status={task.dueStatus}
-          >
-            {DUE_STATUS_LABEL[task.dueStatus]}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant={DUE_STATUS_VARIANT[task.dueStatus]}
+              data-status={task.dueStatus}
+            >
+              {DUE_STATUS_LABEL[task.dueStatus]}
+            </Badge>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`Edit ${task.name}`}
+              disabled={!hydrated}
+              onClick={onEdit}
+            >
+              <PencilIcon />
+            </Button>
+          </div>
         </div>
         <CardDescription className="text-base text-foreground">
           {formatElapsedLine(task, now)}
