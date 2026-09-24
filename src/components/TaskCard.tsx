@@ -2,6 +2,7 @@ import { UTCDate } from '@date-fns/utc'
 import { useHydrated } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { PencilIcon } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 import { Badge } from '#/components/utils/Badge'
 import { Button } from '#/components/utils/Button'
@@ -44,14 +45,51 @@ export type TaskCardProps = {
   /** Reference time for elapsed and due copy; defaults to now. */
   now?: Date
   onEdit: () => void
+  /**
+   * Marks the card as just saved: it is outlined briefly, scrolled into view,
+   * and its edit button takes focus so keyboard and screen reader users land
+   * on it.
+   */
+  highlighted?: boolean
 }
 
 // Purely presentational so stories can render it with fixture data.
-export function TaskCard({ task, now = new Date(), onEdit }: TaskCardProps) {
+export function TaskCard({
+  task,
+  now = new Date(),
+  onEdit,
+  highlighted = false,
+}: TaskCardProps) {
   // Editing needs JavaScript, so the button stays disabled until hydration.
   const hydrated = useHydrated()
+  // Refs rather than state: these only reach the DOM to scroll and focus.
+  const cardRef = useRef<HTMLDivElement>(null)
+  const editButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!highlighted) return
+    // Focus without the browser's instant jump so the scroll below can be
+    // smooth; `nearest` leaves an already visible card where it is.
+    editButtonRef.current?.focus({ preventScroll: true })
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+    cardRef.current?.scrollIntoView({
+      block: 'nearest',
+      behavior: reduceMotion ? 'auto' : 'smooth',
+    })
+  }, [highlighted])
+
   return (
-    <Card data-testid="task-card" className="gap-4 py-5">
+    <Card
+      ref={cardRef}
+      data-testid="task-card"
+      data-highlighted={highlighted || undefined}
+      // The scroll margin keeps a scrolled-to card clear of the list's edge
+      // fades. The outline sits inside the card's edge because the list
+      // clips anything outside it. With reduced motion it stays, unfaded.
+      className="scroll-my-12 gap-4 py-5 data-highlighted:outline-2 data-highlighted:-outline-offset-2 data-highlighted:outline-primary data-highlighted:animate-highlight-fade motion-reduce:data-highlighted:animate-none"
+    >
       <CardHeader className="gap-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <CardTitle className="text-lg leading-snug">{task.name}</CardTitle>
@@ -63,6 +101,7 @@ export function TaskCard({ task, now = new Date(), onEdit }: TaskCardProps) {
               {DUE_STATUS_LABEL[task.dueStatus]}
             </Badge>
             <Button
+              ref={editButtonRef}
               variant="ghost"
               size="icon-sm"
               aria-label={`Edit ${task.name}`}

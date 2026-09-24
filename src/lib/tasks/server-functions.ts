@@ -44,20 +44,21 @@ export const listDashboardTasks = createServerFn({ method: 'GET' })
 // The workspace and author always come from the session. The input schemas
 // have no such fields, so any the client sends are stripped by the parse.
 
-/** Creates a task in the signed-in user's workspace. */
+/** Creates a task in the signed-in user's workspace and returns its id. */
 export const createDashboardTask = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .validator((input: TaskFormValues) => parseInput(taskFormSchema, input))
-  .handler(async ({ context, data }): Promise<void> => {
+  .handler(async ({ context, data }): Promise<string> => {
     const userId = context.session.user.id
     const workspace = await getOrCreatePersonalWorkspace(userId)
     const { lastCompletedOn, ...fields } = data
-    await createTask({
+    const created = await createTask({
       ...fields,
       lastCompletedAt: lastCompletedOn,
       workspaceId: workspace.id,
       createdById: userId,
     })
+    return created.id
   })
 
 /** Updates a task's editable fields in the signed-in user's workspace. */

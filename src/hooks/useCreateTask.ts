@@ -6,7 +6,8 @@ import type { TaskFormValues } from '#/lib/tasks/task-input'
 
 /**
  * Creates a task, then refetches the dashboard. The refetch is awaited so a
- * caller's `mutateAsync` settles once the new task is in the list.
+ * caller's `mutateAsync` settles, with the new task's id, once it is in the
+ * list.
  */
 export function useCreateTask() {
   const queryClient = useQueryClient()

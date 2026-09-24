@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react'
+
 import { TaskForm } from '#/components/TaskForm'
 import {
   Sheet,
@@ -16,6 +18,8 @@ export type TaskFormSheetProps = {
   onOpenChange: (open: boolean) => void
   /** The task to edit, read from the dashboard query; omitted to create. */
   task?: Task
+  /** Called with the saved task's id once the sheet has finished closing. */
+  onSaved: (taskId: string) => void
 }
 
 // The single create/edit sheet for the dashboard. It is the default export so
@@ -24,10 +28,18 @@ export default function TaskFormSheet({
   open,
   onOpenChange,
   task,
+  onSaved,
 }: TaskFormSheetProps) {
   const createTask = useCreateTask()
   const updateTask = useUpdateTask()
   const mutation = task ? updateTask : createTask
+  // Held until the sheet has closed: the saved card can only take focus once
+  // the sheet's focus trap has been released.
+  const [savedTaskId, setSavedTaskId] = useState<string | null>(null)
+  // The sheet is opened by several buttons rather than a Radix trigger, so
+  // Radix has nothing to return focus to on close. A ref, not state: it only
+  // holds the DOM element to refocus and never affects rendering.
+  const openerRef = useRef<HTMLElement | null>(null)
 
   function handleOpenChange(nextOpen: boolean) {
     // Clear any failed save so the next opening starts without its error.
@@ -41,15 +53,35 @@ export default function TaskFormSheet({
   async function handleSubmit(values: TaskFormValues) {
     if (task) {
       await updateTask.mutateAsync({ ...values, taskId: task.id })
+      setSavedTaskId(task.id)
     } else {
-      await createTask.mutateAsync(values)
+      setSavedTaskId(await createTask.mutateAsync(values))
     }
     handleOpenChange(false)
   }
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent className="w-full sm:max-w-md">
+      <SheetContent
+        className="w-full sm:max-w-md"
+        onOpenAutoFocus={() => {
+          // Focus has not moved into the sheet yet, so this is the opener.
+          openerRef.current =
+            document.activeElement instanceof HTMLElement
+              ? document.activeElement
+              : null
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          if (savedTaskId !== null) {
+            // The saved card takes focus instead of the opener.
+            onSaved(savedTaskId)
+            setSavedTaskId(null)
+          } else {
+            openerRef.current?.focus()
+          }
+        }}
+      >
         <SheetHeader>
           <SheetTitle>{task ? 'Edit task' : 'New task'}</SheetTitle>
           <SheetDescription>

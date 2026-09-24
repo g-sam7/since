@@ -14,6 +14,8 @@ export type TaskDashboardProps = {
   now?: Date
   onCreate: () => void
   onEdit: (task: DashboardTask) => void
+  /** The task just created or edited, marked so the user can find it. */
+  highlightedTaskId?: string | null
 }
 
 // Purely presentational so stories can render the empty and populated states.
@@ -22,6 +24,7 @@ export function TaskDashboard({
   now = new Date(),
   onCreate,
   onEdit,
+  highlightedTaskId = null,
 }: TaskDashboardProps) {
   // The top fade only appears once the list has scrolled, so the cards look
   // untouched in their resting state.
@@ -79,7 +82,12 @@ export function TaskDashboard({
         >
           {tasks.map((task) => (
             <li key={task.id}>
-              <TaskCard task={task} now={now} onEdit={() => onEdit(task)} />
+              <TaskCard
+                task={task}
+                now={now}
+                onEdit={() => onEdit(task)}
+                highlighted={task.id === highlightedTaskId}
+              />
             </li>
           ))}
         </ul>

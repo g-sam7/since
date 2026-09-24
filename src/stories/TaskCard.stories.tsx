@@ -66,6 +66,20 @@ export const Edit: Story = {
   },
 }
 
+export const Highlighted: Story = {
+  args: { task: overdueTask, highlighted: true },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getByTestId('task-card')).toHaveAttribute(
+      'data-highlighted',
+    )
+    // Keyboard and screen reader users land on the saved card.
+    await expect(
+      canvas.getByRole('button', { name: 'Edit Change the air filter' }),
+    ).toHaveFocus()
+  },
+}
+
 export const DueSoon: Story = {
   args: { task: dueSoonTask },
   play: async ({ canvasElement }) => {

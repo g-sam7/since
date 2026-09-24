@@ -22,10 +22,17 @@ function AppPage() {
   const [hasOpenedSheet, setHasOpenedSheet] = useState(false)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
+  // The task last created or edited, marked on the dashboard so it can be
+  // found after the sort moves it. Cleared on the next opening so saving the
+  // same task again marks it afresh.
+  const [highlightedTaskId, setHighlightedTaskId] = useState<string | null>(
+    null,
+  )
   // Read from the query each render so the form opens with persisted values.
   const editingTask = tasks.find((task) => task.id === editingTaskId)
 
   function openSheet(taskId: string | null) {
+    setHighlightedTaskId(null)
     setEditingTaskId(taskId)
     setSheetOpen(true)
     setHasOpenedSheet(true)
@@ -37,6 +44,7 @@ function AppPage() {
         tasks={tasks}
         onCreate={() => openSheet(null)}
         onEdit={(task) => openSheet(task.id)}
+        highlightedTaskId={highlightedTaskId}
       />
       {hasOpenedSheet && (
         <Suspense fallback={null}>
@@ -47,6 +55,7 @@ function AppPage() {
             open={sheetOpen && (editingTaskId === null || !!editingTask)}
             onOpenChange={setSheetOpen}
             task={editingTask}
+            onSaved={setHighlightedTaskId}
           />
         </Suspense>
       )}

@@ -2,7 +2,12 @@ import type { Meta, StoryObj } from '@storybook/tanstack-react'
 import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { TaskDashboard } from '#/components/TaskDashboard'
-import { FIXTURE_NOW, dashboardTasks, dueSoonTask } from '#/test-utils/tasks'
+import {
+  FIXTURE_NOW,
+  dashboardTasks,
+  dueSoonTask,
+  upcomingTask,
+} from '#/test-utils/tasks'
 
 const meta = {
   title: 'Tasks/TaskDashboard',
@@ -72,5 +77,20 @@ export const CreateAndEditActions: Story = {
     )
     await expect(args.onEdit).toHaveBeenCalledOnce()
     await expect(args.onEdit).toHaveBeenCalledWith(dueSoonTask)
+  },
+}
+
+export const HighlightedTask: Story = {
+  args: { tasks: dashboardTasks, highlightedTaskId: upcomingTask.id },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const highlighted = canvas
+      .getAllByTestId('task-card')
+      .filter((card) => card.hasAttribute('data-highlighted'))
+    await expect(highlighted).toHaveLength(1)
+    await expect(highlighted[0]).toHaveTextContent('See the dentist')
+    await expect(
+      canvas.getByRole('button', { name: 'Edit See the dentist' }),
+    ).toHaveFocus()
   },
 }
