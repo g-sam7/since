@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { TaskForm } from '#/components/TaskForm'
 import {
@@ -41,14 +41,18 @@ export default function TaskFormSheet({
   // holds the DOM element to refocus and never affects rendering.
   const openerRef = useRef<HTMLElement | null>(null)
 
-  function handleOpenChange(nextOpen: boolean) {
-    // Clear any failed save so the next opening starts without its error.
-    if (!nextOpen) {
-      createTask.reset()
-      updateTask.reset()
+  // Clear any failed save so the next opening starts without its error. Keyed
+  // on `open` rather than done in `onOpenChange` because the route can also
+  // close the sheet by changing the prop (when the edited task disappears),
+  // and Radix does not call `onOpenChange` for that.
+  const resetCreate = createTask.reset
+  const resetUpdate = updateTask.reset
+  useEffect(() => {
+    if (!open) {
+      resetCreate()
+      resetUpdate()
     }
-    onOpenChange(nextOpen)
-  }
+  }, [open, resetCreate, resetUpdate])
 
   async function handleSubmit(values: TaskFormValues) {
     if (task) {
@@ -57,11 +61,11 @@ export default function TaskFormSheet({
     } else {
       setSavedTaskId(await createTask.mutateAsync(values))
     }
-    handleOpenChange(false)
+    onOpenChange(false)
   }
 
   return (
-    <Sheet open={open} onOpenChange={handleOpenChange}>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         className="w-full sm:max-w-md"
         onOpenAutoFocus={() => {
