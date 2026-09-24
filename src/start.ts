@@ -1,5 +1,5 @@
 import { createSerializationAdapter } from '@tanstack/react-router'
-import { createStart } from '@tanstack/react-start'
+import { createCsrfMiddleware, createStart } from '@tanstack/react-start'
 
 import { AppError } from '#/lib/app-error'
 
@@ -12,6 +12,14 @@ const appErrorAdapter = createSerializationAdapter({
   fromSerializable: ({ code, message }) => new AppError(code, message),
 })
 
+// Start applies this by default only when there is no start file; defining
+// `startInstance` replaces the default, so it has to be listed here.
+// `start.test.ts` fails if it goes missing.
+const csrfMiddleware = createCsrfMiddleware({
+  filter: (ctx) => ctx.handlerType === 'serverFn',
+})
+
 export const startInstance = createStart(() => ({
+  requestMiddleware: [csrfMiddleware],
   serializationAdapters: [appErrorAdapter],
 }))
