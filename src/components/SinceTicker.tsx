@@ -51,7 +51,7 @@ export function SinceTicker() {
 
   return (
     <h1
-      className={`display-title mb-3 max-w-4xl text-3xl font-bold tracking-tight text-foreground transition-opacity duration-[350ms] ease-out motion-reduce:transition-none sm:text-5xl ${
+      className={`display-title mb-3 max-w-4xl text-3xl font-semibold text-foreground transition-opacity duration-[350ms] ease-out motion-reduce:transition-none sm:text-5xl ${
         isFadingOut ? 'opacity-0' : 'opacity-100'
       }`}
     >

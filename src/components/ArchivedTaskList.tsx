@@ -95,7 +95,7 @@ export function ArchivedTaskList({
         {/* Laid out like the dashboard heading: an icon button with a
             browser tooltip naming it. */}
         <div className="flex items-center justify-between gap-3">
-          <h1 className="display-title text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="display-title text-3xl font-semibold text-foreground sm:text-4xl">
             Archived tasks
           </h1>
           <Button variant="outline" size="icon" asChild>

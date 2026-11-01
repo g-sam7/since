@@ -63,7 +63,7 @@ function NotFound() {
       <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
         Not found
       </p>
-      <h1 className="display-title mb-3 max-w-2xl text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+      <h1 className="display-title mb-3 max-w-2xl text-4xl font-semibold text-foreground sm:text-5xl">
         That page does not exist.
       </h1>
       <p className="mb-8 max-w-md text-base text-muted-foreground">

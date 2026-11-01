@@ -63,7 +63,7 @@ export function TaskDashboard({
         <div className="island-shell flex flex-col items-center gap-6 rounded-2xl p-6 sm:p-10">
           {errorAlert}
           <div>
-            <h1 className="display-title mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="display-title mb-4 text-3xl font-semibold text-foreground sm:text-4xl">
               Your tasks
             </h1>
             {/* Worded, with the buttons below, to suit both a new user and one
@@ -92,7 +92,7 @@ export function TaskDashboard({
     <main className="px-4 py-10">
       <div className="page-wrap flex flex-col">
         <div className="mb-6 flex w-full items-center justify-between gap-3">
-          <h1 className="display-title text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="display-title text-3xl font-semibold text-foreground sm:text-4xl">
             Your tasks
           </h1>
           {/* Icon buttons alike in shape, each with a browser tooltip naming
