@@ -1,5 +1,10 @@
 import { UTCDate } from '@date-fns/utc'
-import { add, formatDistanceStrict, milliseconds } from 'date-fns'
+import {
+  add,
+  differenceInSeconds,
+  formatDistanceStrict,
+  milliseconds,
+} from 'date-fns'
 import type { Duration } from 'date-fns'
 
 import type { IntervalUnit, Task } from '#/db/task-schema'
@@ -68,12 +73,19 @@ export function compareByNextDue(a: DueInput, b: DueInput): number {
 // Display copy below is strict (no "about"/"almost") and rounded to the
 // nearest unit; it is marketing-style copy, not a precise measurement.
 
-/** "It's been X since" copy measured from the task's due anchor, e.g. "3 months". */
+/**
+ * "It's been X since" copy measured from the task's due anchor, e.g.
+ * "3 months". Under a minute reads "less than a minute" rather than
+ * "0 seconds", which also covers an anchor a little ahead of a skewed client
+ * clock just after the task is created or completed.
+ */
 export function formatTaskElapsed(
   task: DueInput,
   now: Date = new Date(),
 ): string {
-  return formatDistanceStrict(getDueAnchor(task), now)
+  const anchor = getDueAnchor(task)
+  if (differenceInSeconds(now, anchor) < 60) return 'less than a minute'
+  return formatDistanceStrict(anchor, now)
 }
 
 /** Relative due time for a task list, e.g. "in 5 days" or "2 days ago". */

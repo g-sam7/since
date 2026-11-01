@@ -35,4 +35,22 @@ describe('formatElapsedLine', () => {
       ),
     ).toBe("It's been 2 days since you last did this.")
   })
+
+  it('reads "less than a minute" just after completion', () => {
+    expect(
+      formatElapsedLine(
+        { ...baseTask, lastCompletedAt: at('2026-06-01T00:00:00Z') },
+        at('2026-06-01T00:00:59Z'),
+      ),
+    ).toBe("It's been less than a minute since you last did this.")
+  })
+
+  it('reads "less than a minute" just after creation', () => {
+    expect(formatElapsedLine(baseTask, at('2026-01-01T00:00:59Z'))).toBe(
+      'Created less than a minute ago, never completed.',
+    )
+    expect(formatElapsedLine(baseTask, at('2026-01-01T00:01:00Z'))).toBe(
+      'Created 1 minute ago, never completed.',
+    )
+  })
 })

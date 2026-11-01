@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { intervalUnit } from '#/db/task-schema'
-import { INTERVAL_UNITS, taskFormSchema, updateTaskSchema } from './task-input'
+import {
+  INTERVAL_UNITS,
+  taskFormSchema,
+  taskIdSchema,
+  updateTaskSchema,
+} from './task-input'
 import type { TaskFormValues } from './task-input'
 
 const validValues: TaskFormValues = {
@@ -139,5 +144,19 @@ describe('updateTaskSchema', () => {
       updateTaskSchema.safeParse({ ...validValues, taskId: 'not-a-uuid' })
         .success,
     ).toBe(false)
+  })
+})
+
+describe('taskIdSchema', () => {
+  const taskId = '00000000-0000-4000-8000-000000000001'
+
+  it('keeps only the task id', () => {
+    expect(
+      taskIdSchema.parse({ taskId, workspaceId: 'another-workspace' }),
+    ).toEqual({ taskId })
+  })
+
+  it('requires a UUID task id', () => {
+    expect(taskIdSchema.safeParse({ taskId: 'not-a-uuid' }).success).toBe(false)
   })
 })

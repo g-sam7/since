@@ -1,5 +1,3 @@
-import { formatDistanceStrict } from 'date-fns'
-
 import type { Task } from '#/db/task-schema'
 import { formatTaskElapsed } from './due'
 
@@ -19,7 +17,7 @@ export function formatElapsedLine(
   now: Date = new Date(),
 ): string {
   if (task.lastCompletedAt === null) {
-    return `Created ${formatDistanceStrict(task.createdAt, now)} ago, never completed.`
+    return `Created ${formatTaskElapsed(task, now)} ago, never completed.`
   }
   return `It's been ${formatTaskElapsed(task, now)} since you last did this.`
 }

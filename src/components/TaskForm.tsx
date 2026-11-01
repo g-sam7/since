@@ -1,8 +1,8 @@
 import { UTCDate } from '@date-fns/utc'
 import { revalidateLogic, useForm } from '@tanstack/react-form'
 import { format } from 'date-fns'
-import { XIcon } from 'lucide-react'
 
+import { ErrorAlert } from '#/components/ErrorAlert'
 import { Button } from '#/components/utils/Button'
 import { Input } from '#/components/utils/Input'
 import { Label } from '#/components/utils/Label'
@@ -102,21 +102,9 @@ export function TaskForm({
       }}
     >
       {error && (
-        <div
-          role="alert"
-          className="flex items-start justify-between gap-2 rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive"
-        >
-          <p>{SAVE_ERROR_MESSAGE[getAppErrorCode(error)]}</p>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-xs"
-            aria-label="Dismiss error"
-            onClick={onDismissError}
-          >
-            <XIcon />
-          </Button>
-        </div>
+        <ErrorAlert onDismiss={onDismissError}>
+          {SAVE_ERROR_MESSAGE[getAppErrorCode(error)]}
+        </ErrorAlert>
       )}
 
       <form.Field name="name">

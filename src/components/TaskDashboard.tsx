@@ -1,9 +1,13 @@
-import { useHydrated } from '@tanstack/react-router'
-import { PlusIcon } from 'lucide-react'
+import { Link, useHydrated } from '@tanstack/react-router'
+import { ArchiveIcon, PlusIcon } from 'lucide-react'
 import { useState } from 'react'
 
+import { ErrorAlert } from '#/components/ErrorAlert'
 import { TaskCard } from '#/components/TaskCard'
+import type { TaskCardFocus } from '#/components/TaskCard'
 import { Button } from '#/components/utils/Button'
+import { getTaskActionErrorMessage } from '#/lib/tasks/action-error'
+import type { TaskActionError } from '#/lib/tasks/action-error'
 import type { DashboardTask } from '#/lib/tasks/dashboard'
 import { cn } from '#/lib/utils'
 
@@ -14,8 +18,17 @@ export type TaskDashboardProps = {
   now?: Date
   onCreate: () => void
   onEdit: (task: DashboardTask) => void
-  /** The task just created or edited, marked so the user can find it. */
+  onComplete: (task: DashboardTask) => void
+  onArchive: (task: DashboardTask) => void
+  /** Disables every card's Done and Archive while an action is in flight. */
+  actionsDisabled?: boolean
+  /** The failed Done or Archive, from the route's mutations. */
+  actionError?: TaskActionError | null
+  onDismissError: () => void
+  /** The task just created, edited, or completed, marked so the user can find it. */
   highlightedTaskId?: string | null
+  /** Which of the highlighted card's buttons takes focus. */
+  highlightFocus?: TaskCardFocus
 }
 
 // Purely presentational so stories can render the empty and populated states.
@@ -24,7 +37,13 @@ export function TaskDashboard({
   now = new Date(),
   onCreate,
   onEdit,
+  onComplete,
+  onArchive,
+  actionsDisabled = false,
+  actionError = null,
+  onDismissError,
   highlightedTaskId = null,
+  highlightFocus,
 }: TaskDashboardProps) {
   // The top fade only appears once the list has scrolled, so the cards look
   // untouched in their resting state.
@@ -32,19 +51,35 @@ export function TaskDashboard({
   // Creating needs JavaScript, so the button stays disabled until hydration.
   const hydrated = useHydrated()
 
+  const errorAlert = actionError && (
+    <ErrorAlert onDismiss={onDismissError}>
+      {getTaskActionErrorMessage(actionError)}
+    </ErrorAlert>
+  )
+
   if (tasks.length === 0) {
     return (
       <main className="page-wrap flex min-h-[60vh] flex-col items-center justify-center px-4 py-14 text-center">
-        <div className="island-shell rounded-2xl p-6 sm:p-10">
-          <h1 className="display-title mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Welcome back
-          </h1>
-          <p className="mb-6 text-base text-muted-foreground">
-            You don&apos;t have any tracked tasks yet.
-          </p>
-          <Button disabled={!hydrated} onClick={onCreate}>
-            Create your first task
-          </Button>
+        <div className="island-shell flex flex-col items-center gap-6 rounded-2xl p-6 sm:p-10">
+          {errorAlert}
+          <div>
+            <h1 className="display-title mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Welcome back
+            </h1>
+            {/* Worded to suit both a new user and one who has just archived
+                everything, since the dashboard does not know which. */}
+            <p className="text-base text-muted-foreground">
+              You don&apos;t have any active tasks.
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Button disabled={!hydrated} onClick={onCreate}>
+              Create your first task
+            </Button>
+            <Button variant="link" size="sm" asChild>
+              <Link to="/archived">View archived tasks</Link>
+            </Button>
+          </div>
         </div>
       </main>
     )
@@ -67,7 +102,14 @@ export function TaskDashboard({
           >
             <PlusIcon />
           </Button>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/archived">
+              <ArchiveIcon />
+              Archived
+            </Link>
+          </Button>
         </div>
+        {errorAlert && <div className="mb-4 w-full">{errorAlert}</div>}
         <ul
           aria-label="Tasks"
           onScroll={(event) => setIsScrolled(event.currentTarget.scrollTop > 0)}
@@ -86,7 +128,11 @@ export function TaskDashboard({
                 task={task}
                 now={now}
                 onEdit={() => onEdit(task)}
+                onComplete={() => onComplete(task)}
+                onArchive={() => onArchive(task)}
+                actionsDisabled={actionsDisabled}
                 highlighted={task.id === highlightedTaskId}
+                highlightFocus={highlightFocus}
               />
             </li>
           ))}
