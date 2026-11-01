@@ -262,7 +262,7 @@ export function TaskForm({
             className="mt-auto"
             disabled={!canSubmit || isSubmitting}
           >
-            {isSubmitting ? 'Saving...' : task ? 'Save changes' : 'Create task'}
+            {isSubmitting ? 'Saving…' : task ? 'Save changes' : 'Create task'}
           </Button>
         )}
       </form.Subscribe>

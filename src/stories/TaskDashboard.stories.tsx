@@ -36,7 +36,9 @@ export const Empty: Story = {
   args: { tasks: [] },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(canvas.getByText('Welcome back')).toBeVisible()
+    await expect(
+      canvas.getByRole('heading', { name: 'Your tasks' }),
+    ).toBeVisible()
     await expect(
       canvas.getByText("You don't have any active tasks."),
     ).toBeVisible()

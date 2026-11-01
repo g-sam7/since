@@ -117,7 +117,7 @@ function SignUp() {
           </CardContent>
           <CardFooter className="flex flex-col gap-3 py-6">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Sign up'}
+              {loading ? 'Creating account…' : 'Sign up'}
             </Button>
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}

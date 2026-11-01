@@ -16,7 +16,7 @@ const meta = {
     rows: { control: 'number' },
   },
   args: {
-    placeholder: 'Type something...',
+    placeholder: 'Type something…',
     disabled: false,
   },
   decorators: [
@@ -63,7 +63,7 @@ export const WithLabel: Story = {
   render: () => (
     <div className="space-y-1.5">
       <Label htmlFor="bio">Bio</Label>
-      <TextArea id="bio" placeholder="Tell us about yourself..." />
+      <TextArea id="bio" placeholder="Tell us about yourself…" />
     </div>
   ),
 }
@@ -90,7 +90,7 @@ export const FormExample: Story = {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="message">Message</Label>
-        <TextArea id="message" placeholder="Write your message..." rows={5} />
+        <TextArea id="message" placeholder="Write your message…" rows={5} />
       </div>
       <Button className="w-full">Send message</Button>
     </div>

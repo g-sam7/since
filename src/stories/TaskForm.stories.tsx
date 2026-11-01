@@ -137,7 +137,7 @@ export const CreateSuccess: Story = {
     )
 
     await expect(
-      await canvas.findByRole('button', { name: 'Saving...' }),
+      await canvas.findByRole('button', { name: 'Saving…' }),
     ).toBeDisabled()
     await expect(args.onSubmit).toHaveBeenCalledOnce()
     await expect(args.onSubmit).toHaveBeenCalledWith({

@@ -34,7 +34,7 @@ const meta = {
   },
   args: {
     type: 'text',
-    placeholder: 'Placeholder...',
+    placeholder: 'Placeholder…',
     disabled: false,
   },
 } satisfies Meta<typeof Input>

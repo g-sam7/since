@@ -64,9 +64,9 @@ export function TaskDashboard({
           {errorAlert}
           <div>
             <h1 className="display-title mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Welcome back
+              Your tasks
             </h1>
-            {/* Worded, with the button below, to suit both a new user and one
+            {/* Worded, with the buttons below, to suit both a new user and one
                 who has just archived everything, since the dashboard does not
                 know which. */}
             <p className="text-base text-muted-foreground">
