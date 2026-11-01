@@ -1,10 +1,11 @@
 import { authClient } from '#/lib/auth-client'
 import { Button } from '#/components/utils/Button'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 
 export default function BetterAuthHeader() {
   const { data: session, isPending } = authClient.useSession()
   const navigate = useNavigate()
+  const pathname = useLocation({ select: (location) => location.pathname })
 
   if (isPending) {
     return (
@@ -46,6 +47,9 @@ export default function BetterAuthHeader() {
       </div>
     )
   }
+
+  // On the sign-in page the link would lead nowhere.
+  if (pathname === '/sign-in') return null
 
   return (
     <Button

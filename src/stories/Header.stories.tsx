@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { expect, within } from 'storybook/test'
 import Header from '#/components/Header'
 import { authClient } from '#/lib/auth-client'
 
@@ -42,7 +43,7 @@ function configureAuthClient() {
     async () => {}
 }
 
-function createStoryRouter(content?: ReactNode) {
+function createStoryRouter(content?: ReactNode, path = '/') {
   const rootRoute = createRootRoute({
     component: () => (
       <div className="mx-auto w-full max-w-5xl border border-border bg-background">
@@ -71,13 +72,19 @@ function createStoryRouter(content?: ReactNode) {
 
   return createRouter({
     routeTree,
-    history: createMemoryHistory({ initialEntries: ['/'] }),
+    history: createMemoryHistory({ initialEntries: [path] }),
   })
 }
 
-function HeaderFrame({ content }: { content?: ReactNode }) {
+function HeaderFrame({
+  content,
+  path,
+}: {
+  content?: ReactNode
+  path?: string
+}) {
   configureAuthClient()
-  const router = createStoryRouter(content)
+  const router = createStoryRouter(content, path)
 
   return <RouterProvider router={router} />
 }
@@ -119,6 +126,24 @@ export const SignedOut: Story = {
   render: () => {
     authState = 'signed-out'
     return <HeaderFrame />
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(
+      await canvas.findByRole('link', { name: 'Sign in' }),
+    ).toBeVisible()
+  },
+}
+
+export const SignedOutOnSignInPage: Story = {
+  render: () => {
+    authState = 'signed-out'
+    return <HeaderFrame path="/sign-in" />
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await canvas.findByRole('link', { name: 'Since' })
+    await expect(canvas.queryByRole('link', { name: 'Sign in' })).toBeNull()
   },
 }
 
