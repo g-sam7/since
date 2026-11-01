@@ -148,7 +148,9 @@ export function ArchivedTaskList({
                         variant="ghost"
                         size="sm"
                         className="text-destructive hover:text-destructive"
-                        aria-label={`Delete ${task.name} permanently`}
+                        // Starts with the visible text so speech input
+                        // ("click Delete permanently") still matches it.
+                        aria-label={`Delete permanently: ${task.name}`}
                         disabled={!hydrated || actionsDisabled}
                         onClick={(event) =>
                           openConfirm(task, event.currentTarget)
@@ -168,6 +170,12 @@ export function ArchivedTaskList({
 
       <AlertDialog open={confirmOpen} onOpenChange={handleConfirmOpenChange}>
         <AlertDialogContent
+          // Cancel is disabled while the delete runs, but Escape would still
+          // close the dialog, and a failure arriving after that would have
+          // nowhere to show. Outside clicks never close an alert dialog.
+          onEscapeKeyDown={(event) => {
+            if (actionsDisabled) event.preventDefault()
+          }}
           onCloseAutoFocus={(event) => {
             event.preventDefault()
             // After a delete the opener has left the page with its row.

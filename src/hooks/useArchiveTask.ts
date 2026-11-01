@@ -14,6 +14,15 @@ export function useArchiveTask() {
     mutationFn: (input: TaskIdInput) => archiveDashboardTask({ data: input }),
     // Settled rather than success: a failure is often a stale list, such as
     // a task already archived in another tab, and the refetch corrects it.
-    onSettled: () => queryClient.invalidateQueries({ queryKey: tasksQueryKey }),
+    //
+    // `all` also refetches the list that is not on screen (the dashboard or
+    // the archived view), which this action changes too. Otherwise its loader
+    // serves the cached copy and shows the old list until a background
+    // refetch lands.
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: tasksQueryKey,
+        refetchType: 'all',
+      }),
   })
 }

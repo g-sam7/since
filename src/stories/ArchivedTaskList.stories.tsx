@@ -24,21 +24,27 @@ const meta = {
     onDelete: fn(() => Promise.resolve()),
     onDismissError: fn(),
   },
-  // Mirrors the `/archived` route, which passes the failed delete's error
-  // back in: a rejected `onDelete` is shown until it is dismissed.
+  // Mirrors the `/archived` route, which disables the actions while a delete
+  // is in flight and passes its error back in: a rejected `onDelete` is shown
+  // until it is dismissed.
   render: function Render(args) {
     const [actionError, setActionError] = useState<TaskActionError | null>(null)
+    const [deleting, setDeleting] = useState(false)
     return (
       <ArchivedTaskList
         {...args}
+        actionsDisabled={args.actionsDisabled || deleting}
         actionError={actionError}
         onDelete={async (task) => {
           setActionError(null)
+          setDeleting(true)
           try {
             await args.onDelete(task)
           } catch (caught) {
             setActionError({ action: 'delete', error: caught as Error })
             throw caught
+          } finally {
+            setDeleting(false)
           }
         }}
         onDismissError={() => {
@@ -103,7 +109,7 @@ export const DeleteCancelled: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement)
     const deleteButton = canvas.getByRole('button', {
-      name: 'Delete Renew the passport permanently',
+      name: 'Delete permanently: Renew the passport',
     })
     await userEvent.click(deleteButton)
 
@@ -126,7 +132,7 @@ export const DeleteConfirmed: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(
       canvas.getByRole('button', {
-        name: 'Delete Renew the passport permanently',
+        name: 'Delete permanently: Renew the passport',
       }),
     )
     const dialog = await page().findByRole('alertdialog')
@@ -147,7 +153,7 @@ export const DeleteServerError: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(
       canvas.getByRole('button', {
-        name: 'Delete Renew the passport permanently',
+        name: 'Delete permanently: Renew the passport',
       }),
     )
     const dialog = await page().findByRole('alertdialog')
@@ -166,6 +172,44 @@ export const DeleteServerError: Story = {
     )
     await expect(args.onDismissError).toHaveBeenCalledOnce()
     await expect(canvas.getAllByTestId('archived-task')).toHaveLength(2)
+  },
+}
+
+export const EscapeWhileDeleting: Story = {
+  args: {
+    // Fails after a delay, leaving time to press Escape while in flight.
+    onDelete: fn(
+      () =>
+        new Promise<void>((_, reject) =>
+          setTimeout(() => reject(new AppError('internal')), 300),
+        ),
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Delete permanently: Renew the passport',
+      }),
+    )
+    const dialog = await page().findByRole('alertdialog')
+    const confirm = within(dialog).getByRole('button', {
+      name: 'Delete permanently',
+    })
+    await userEvent.click(confirm)
+    await expect(confirm).toBeDisabled()
+
+    // Escape is ignored while the delete runs, so the failure still has
+    // somewhere to show.
+    await userEvent.keyboard('{Escape}')
+    await expect(page().getByRole('alertdialog')).toBeVisible()
+    await expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+      "Couldn't delete the task. Please try again.",
+    )
+
+    // Once it has settled, Escape closes the dialog as usual.
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(page().queryByRole('alertdialog')).toBeNull())
   },
 }
 

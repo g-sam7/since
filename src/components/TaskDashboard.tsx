@@ -66,15 +66,16 @@ export function TaskDashboard({
             <h1 className="display-title mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Welcome back
             </h1>
-            {/* Worded to suit both a new user and one who has just archived
-                everything, since the dashboard does not know which. */}
+            {/* Worded, with the button below, to suit both a new user and one
+                who has just archived everything, since the dashboard does not
+                know which. */}
             <p className="text-base text-muted-foreground">
               You don&apos;t have any active tasks.
             </p>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Button disabled={!hydrated} onClick={onCreate}>
-              Create your first task
+              Create a task
             </Button>
             <Button variant="link" size="sm" asChild>
               <Link to="/archived">View archived tasks</Link>

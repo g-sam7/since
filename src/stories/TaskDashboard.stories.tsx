@@ -44,9 +44,7 @@ export const Empty: Story = {
     await expect(
       canvas.getByRole('link', { name: 'View archived tasks' }),
     ).toHaveAttribute('href', '/archived')
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Create your first task' }),
-    )
+    await userEvent.click(canvas.getByRole('button', { name: 'Create a task' }))
     await expect(args.onCreate).toHaveBeenCalledOnce()
     // The heading's "New task" action is only on the populated dashboard.
     await expect(
