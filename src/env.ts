@@ -14,7 +14,9 @@ export const env = createEnv({
    */
   clientPrefix: 'VITE_',
 
-  client: {},
+  client: {
+    VITE_COMMIT_SHA: z.string().min(1).optional(),
+  },
 
   /**
    * What object holds the environment variables at runtime. This is usually
