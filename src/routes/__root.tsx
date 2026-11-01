@@ -84,10 +84,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       {/* A full-height column whose page area grows, so the footer sits at
-          the bottom of the screen when the page is shorter than it. */}
+          the bottom of the screen when the page is shorter than it. The page
+          area is a column too, so a page can grow to fill it. */}
       <body className="flex min-h-dvh flex-col font-sans antialiased [overflow-wrap:anywhere] selection:bg-surface-selection selection:text-foreground">
         <Header />
-        <div className="flex-1">{children}</div>
+        <div className="flex flex-1 flex-col">{children}</div>
         <Footer />
         <TanStackDevtools
           config={{
