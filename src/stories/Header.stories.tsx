@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
-import { expect, mocked, within } from 'storybook/test'
+import { expect, mocked, userEvent, waitFor, within } from 'storybook/test'
 import Header from '#/components/Header'
 import { authClient } from '#/lib/auth-client'
 
@@ -125,15 +125,30 @@ export const SignedOutOnSignInPage: Story = {
   },
 }
 
+// The account menu renders in a portal outside the story's canvas.
+const page = () => within(document.body)
+
 export const SignedIn: Story = {
   beforeEach: signedIn,
   render: () => <HeaderFrame />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(
-      await canvas.findByRole('button', { name: 'Sign out' }),
-    ).toBeVisible()
     await expect(canvas.queryByRole('link', { name: 'Sign in' })).toBeNull()
+    // Signing out lives in the menu, not the header itself.
+    await expect(canvas.queryByRole('button', { name: 'Sign out' })).toBeNull()
+
+    await userEvent.click(
+      await canvas.findByRole('button', { name: 'Account menu' }),
+    )
+    const menu = await page().findByRole('menu')
+    await expect(menu).toHaveTextContent('Sam')
+    await expect(menu).toHaveTextContent('sam@example.com')
+
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Sign out' }),
+    )
+    await expect(authClient.signOut).toHaveBeenCalledOnce()
+    await waitFor(() => expect(page().queryByRole('menu')).toBeNull())
   },
 }
 
