@@ -83,9 +83,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-surface-selection selection:text-foreground">
+      {/* A full-height column whose page area grows, so the footer sits at
+          the bottom of the screen when the page is shorter than it. */}
+      <body className="flex min-h-dvh flex-col font-sans antialiased [overflow-wrap:anywhere] selection:bg-surface-selection selection:text-foreground">
         <Header />
-        {children}
+        <div className="flex-1">{children}</div>
         <Footer />
         <TanStackDevtools
           config={{
