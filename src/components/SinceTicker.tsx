@@ -122,7 +122,7 @@ function ClockBackdrop() {
     <svg
       viewBox="0 0 100 100"
       aria-hidden="true"
-      className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[min(22rem,80vw)] -translate-x-1/2 -translate-y-1/2 text-primary opacity-[0.08] dark:opacity-[0.14]"
+      className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[min(14rem,70vw)] -translate-x-1/2 sm:size-[var(--hero-clock,20rem)] -translate-y-1/2 text-primary opacity-[0.08] dark:opacity-[0.14]"
     >
       <circle
         cx="50"
