@@ -79,7 +79,10 @@ export function SinceTicker() {
   }, [])
 
   return (
-    <div className="relative isolate mb-3">
+    // Not `isolate`: the clock spills past this wrapper, and must sink behind
+    // the rest of the page (the landing page's isolated `main`), not just
+    // behind the heading, or it paints over the buttons below.
+    <div className="relative mb-3">
       {/* Keyed so each sentence restarts the sweep. */}
       <ClockBackdrop key={activeIndex} />
       {/* Every sentence shares one grid cell, the inactive ones hidden but
