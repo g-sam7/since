@@ -1,9 +1,18 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 
 import { SinceTicker } from '#/components/SinceTicker'
 import { Button } from '#/components/utils/Button'
+import { getAuthSession } from '#/lib/auth-session'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    const session = await getAuthSession()
+    if (session) {
+      throw redirect({ to: '/app' })
+    }
+  },
+  component: App,
+})
 
 function App() {
   return (
