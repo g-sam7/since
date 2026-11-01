@@ -12,7 +12,6 @@ import type { ReactNode } from 'react'
 import { expect, mocked, userEvent, waitFor, within } from 'storybook/test'
 import Header from '#/components/Header'
 import { authClient } from '#/lib/auth-client'
-import { tasksQueryKey } from '#/lib/tasks/queries'
 
 type Session = ReturnType<typeof authClient.useSession>
 
@@ -141,8 +140,10 @@ export const SignedIn: Story = {
   beforeEach: signedIn,
   render: () => <HeaderFrame />,
   play: async ({ canvasElement }) => {
-    // Stands in for the signed-in user's tasks, cached by the dashboard.
-    queryClient.setQueryData([...tasksQueryKey, 'dashboard'], [])
+    // Stands in for the signed-in user's cached tasks. A literal key, as
+    // importing the task queries pulls in server functions, which do not
+    // load in the Storybook UI.
+    queryClient.setQueryData(['tasks', 'dashboard'], [])
     const canvas = within(canvasElement)
     await expect(canvas.queryByRole('link', { name: 'Sign in' })).toBeNull()
     // Signing out lives in the menu, not the header itself.
