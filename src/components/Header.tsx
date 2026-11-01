@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import BetterAuthHeader from '../integrations/better-auth/header-user.tsx'
+import { SinceWordmark } from './SinceWordmark'
 import ThemeToggle from './ThemeToggle'
 
 export default function Header() {
@@ -8,14 +9,12 @@ export default function Header() {
       <nav className="page-wrap flex items-center gap-3 py-3 sm:py-4">
         <Link
           to="/"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-surface-subtle px-3 py-1.5 text-sm font-semibold tracking-tight text-foreground no-underline shadow-[0_10px_24px_var(--shadow-color)] sm:px-4 sm:py-2"
+          aria-label="Since"
+          className="shrink-0 rounded-md no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         >
-          <img
-            src="/apple-touch-icon.png"
-            alt=""
-            className="h-5 w-5 rounded-[5px]"
-          />
-          Since
+          {/* Coloured here: the global link colour would otherwise turn the
+              letters primary. */}
+          <SinceWordmark className="h-7 w-auto text-foreground sm:h-8" />
         </Link>
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
