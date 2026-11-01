@@ -12,7 +12,7 @@
   --surface-subtle: #eef1ed;
   --surface: rgba(255, 255, 255, 0.82);
   --surface-strong: rgba(255, 255, 255, 0.96);
-  --surface-header: rgba(246, 247, 244, 0.88);
+  --surface-header: rgba(255, 255, 255, 0.9);
   --surface-chip: #f2f4f1;
   --surface-accent: color-mix(in srgb, var(--action) 9%, var(--surface-subtle));
   --surface-selection: rgba(51, 93, 135, 0.18);
@@ -86,7 +86,7 @@
   --surface-subtle: #171d19;
   --surface: rgba(23, 29, 25, 0.82);
   --surface-strong: rgba(29, 36, 31, 0.94);
-  --surface-header: rgba(16, 20, 17, 0.88);
+  --surface-header: rgba(29, 36, 31, 0.9);
   --surface-chip: #151b18;
   --surface-accent: color-mix(
     in srgb,
