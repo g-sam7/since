@@ -21,6 +21,7 @@ import { authClient } from '#/lib/auth-client'
 import { getAuthSession } from '#/lib/auth-session'
 
 export const Route = createFileRoute('/sign-in')({
+  head: () => ({ meta: [{ title: 'Sign in · Since' }] }),
   beforeLoad: async () => {
     const session = await getAuthSession()
     if (session) {

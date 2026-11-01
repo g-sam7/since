@@ -9,6 +9,7 @@ import type { TaskActionError } from '#/lib/tasks/action-error'
 import { archivedTasksQueryOptions } from '#/lib/tasks/queries'
 
 export const Route = createFileRoute('/_authed/archived')({
+  head: () => ({ meta: [{ title: 'Archived tasks · Since' }] }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData(archivedTasksQueryOptions),
   component: ArchivedPage,
