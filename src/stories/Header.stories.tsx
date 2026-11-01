@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/tanstack-react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
   createMemoryHistory,
   createRootRoute,
@@ -11,6 +12,7 @@ import type { ReactNode } from 'react'
 import { expect, mocked, userEvent, waitFor, within } from 'storybook/test'
 import Header from '#/components/Header'
 import { authClient } from '#/lib/auth-client'
+import { tasksQueryKey } from '#/lib/tasks/queries'
 
 type Session = ReturnType<typeof authClient.useSession>
 
@@ -29,6 +31,9 @@ const signedIn = withSession({
 })
 const signedOut = withSession({ data: null, isPending: false })
 const loading = withSession({ data: null, isPending: true })
+
+// Shared with `play` functions so they can inspect the cache.
+const queryClient = new QueryClient()
 
 function createStoryRouter(content?: ReactNode, path = '/') {
   const rootRoute = createRootRoute({
@@ -72,7 +77,11 @@ function HeaderFrame({
 }) {
   const router = createStoryRouter(content, path)
 
-  return <RouterProvider router={router} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  )
 }
 
 const meta = {
@@ -132,6 +141,8 @@ export const SignedIn: Story = {
   beforeEach: signedIn,
   render: () => <HeaderFrame />,
   play: async ({ canvasElement }) => {
+    // Stands in for the signed-in user's tasks, cached by the dashboard.
+    queryClient.setQueryData([...tasksQueryKey, 'dashboard'], [])
     const canvas = within(canvasElement)
     await expect(canvas.queryByRole('link', { name: 'Sign in' })).toBeNull()
     // Signing out lives in the menu, not the header itself.
@@ -149,6 +160,10 @@ export const SignedIn: Story = {
     )
     await expect(authClient.signOut).toHaveBeenCalledOnce()
     await waitFor(() => expect(page().queryByRole('menu')).toBeNull())
+    // Otherwise the next user to sign in in this tab sees these tasks.
+    await waitFor(() =>
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(0),
+    )
   },
 }
 

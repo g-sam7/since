@@ -8,12 +8,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '#/components/utils/DropdownMenu'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { LogOutIcon } from 'lucide-react'
 
 export default function BetterAuthHeader() {
   const { data: session, isPending } = authClient.useSession()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const pathname = useLocation({ select: (location) => location.pathname })
 
   async function handleSignOut() {
@@ -23,6 +25,10 @@ export default function BetterAuthHeader() {
       // Session will be invalidated server-side on next navigation
     }
     await navigate({ to: '/sign-in' })
+    // Loaders serve fresh cached data without refetching, so the next user
+    // to sign in in this tab would otherwise see this user's tasks. Cleared
+    // after leaving the page so its queries are not refetched signed out.
+    queryClient.clear()
   }
 
   if (isPending) {
