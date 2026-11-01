@@ -24,11 +24,19 @@ export default function BetterAuthHeader() {
     } catch {
       // Session will be invalidated server-side on next navigation
     }
-    await navigate({ to: '/sign-in' })
-    // Loaders serve fresh cached data without refetching, so the next user
-    // to sign in in this tab would otherwise see this user's tasks. Cleared
-    // after leaving the page so its queries are not refetched signed out.
-    queryClient.clear()
+    try {
+      await navigate({ to: '/sign-in' })
+    } catch {
+      // Navigation should not fail, but if it does the user must still leave
+      // a page whose session is gone; a full load also drops all memory.
+      window.location.assign('/sign-in')
+    } finally {
+      // Loaders serve fresh cached data without refetching, so the next user
+      // to sign in in this tab would otherwise see this user's tasks. Cleared
+      // after leaving the page so its queries are not refetched signed out,
+      // and whether or not the navigation succeeded.
+      queryClient.clear()
+    }
   }
 
   if (isPending) {
