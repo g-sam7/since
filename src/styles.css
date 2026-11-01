@@ -343,11 +343,6 @@ a {
     transform 180ms ease;
 }
 
-.site-footer {
-  border-top: 1px solid var(--line);
-  background: color-mix(in oklab, var(--surface-header) 84%, transparent 16%);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
