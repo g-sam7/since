@@ -8,40 +8,27 @@ import {
   RouterProvider,
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
-import { expect, within } from 'storybook/test'
+import { expect, mocked, within } from 'storybook/test'
 import Header from '#/components/Header'
 import { authClient } from '#/lib/auth-client'
 
-let authState: 'signed-out' | 'loading' | 'signed-in' = 'signed-out'
+type Session = ReturnType<typeof authClient.useSession>
 
-function configureAuthClient() {
-  ;(
-    authClient as unknown as {
-      useSession: () => { data: unknown; isPending: boolean }
-      signOut: () => Promise<void>
-    }
-  ).useSession = () => {
-    if (authState === 'loading') {
-      return { data: null, isPending: true }
-    }
-
-    if (authState === 'signed-in') {
-      return {
-        data: {
-          user: {
-            name: 'Sam',
-            image: null,
-          },
-        },
-        isPending: false,
-      }
-    }
-
-    return { data: null, isPending: false }
+// `authClient` is the mock in `src/lib/__mocks__/auth-client.ts`.
+function withSession(session: Pick<Session, 'data' | 'isPending'>) {
+  return () => {
+    mocked(authClient.useSession).mockReturnValue(session as Session)
   }
-  ;(authClient as unknown as { signOut: () => Promise<void> }).signOut =
-    async () => {}
 }
+
+const signedIn = withSession({
+  data: {
+    user: { name: 'Sam', email: 'sam@example.com', image: null },
+  } as Session['data'],
+  isPending: false,
+})
+const signedOut = withSession({ data: null, isPending: false })
+const loading = withSession({ data: null, isPending: true })
 
 function createStoryRouter(content?: ReactNode, path = '/') {
   const rootRoute = createRootRoute({
@@ -83,7 +70,6 @@ function HeaderFrame({
   content?: ReactNode
   path?: string
 }) {
-  configureAuthClient()
   const router = createStoryRouter(content, path)
 
   return <RouterProvider router={router} />
@@ -109,24 +95,18 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {
-  render: () => {
-    authState = 'signed-out'
-    return <HeaderFrame />
-  },
+  beforeEach: signedOut,
+  render: () => <HeaderFrame />,
 }
 
 export const LoadingSession: Story = {
-  render: () => {
-    authState = 'loading'
-    return <HeaderFrame />
-  },
+  beforeEach: loading,
+  render: () => <HeaderFrame />,
 }
 
 export const SignedOut: Story = {
-  render: () => {
-    authState = 'signed-out'
-    return <HeaderFrame />
-  },
+  beforeEach: signedOut,
+  render: () => <HeaderFrame />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(
@@ -136,10 +116,8 @@ export const SignedOut: Story = {
 }
 
 export const SignedOutOnSignInPage: Story = {
-  render: () => {
-    authState = 'signed-out'
-    return <HeaderFrame path="/sign-in" />
-  },
+  beforeEach: signedOut,
+  render: () => <HeaderFrame path="/sign-in" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await canvas.findByRole('link', { name: 'Since' })
@@ -148,27 +126,29 @@ export const SignedOutOnSignInPage: Story = {
 }
 
 export const SignedIn: Story = {
-  render: () => {
-    authState = 'signed-in'
-    return <HeaderFrame />
+  beforeEach: signedIn,
+  render: () => <HeaderFrame />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(
+      await canvas.findByRole('button', { name: 'Sign out' }),
+    ).toBeVisible()
+    await expect(canvas.queryByRole('link', { name: 'Sign in' })).toBeNull()
   },
 }
 
 export const InPageContext: Story = {
-  render: () => {
-    authState = 'signed-in'
-
-    return (
-      <HeaderFrame
-        content={
-          <main className="space-y-4 px-4 py-10">
-            <p className="text-sm text-muted-foreground font-mono">
-              Page content
-            </p>
-            <div className="h-56 rounded-lg border border-dashed border-border bg-surface-subtle" />
-          </main>
-        }
-      />
-    )
-  },
+  beforeEach: signedIn,
+  render: () => (
+    <HeaderFrame
+      content={
+        <main className="space-y-4 px-4 py-10">
+          <p className="text-sm text-muted-foreground font-mono">
+            Page content
+          </p>
+          <div className="h-56 rounded-lg border border-dashed border-border bg-surface-subtle" />
+        </main>
+      }
+    />
+  ),
 }
