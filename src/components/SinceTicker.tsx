@@ -78,22 +78,32 @@ export function SinceTicker() {
     }
   }, [])
 
-  const current = homePageSinceFixtures[activeIndex]
-
   return (
     <div className="relative isolate mb-3">
       {/* Keyed so each sentence restarts the sweep. */}
       <ClockBackdrop key={activeIndex} />
+      {/* Every sentence shares one grid cell, the inactive ones hidden but
+          still laid out, so the heading keeps the height of the longest at
+          any width and the page below does not jump as they rotate. */}
       <h1
-        className={`display-title max-w-4xl text-3xl font-semibold text-foreground transition-opacity duration-[350ms] ease-out motion-reduce:transition-none sm:text-5xl ${
+        className={`display-title grid max-w-4xl text-3xl font-semibold text-foreground transition-opacity duration-[350ms] ease-out motion-reduce:transition-none sm:text-5xl ${
           isFadingOut ? 'opacity-0' : 'opacity-100'
         }`}
       >
-        It’s been{' '}
-        <span className={STATUS_TEXT[current.status]}>
-          {current.amount} {current.unit}
-        </span>{' '}
-        since you <span className="italic">{current.activity}</span>.
+        {homePageSinceFixtures.map((fixture, index) => (
+          <span
+            key={index}
+            className={`col-start-1 row-start-1 self-center ${
+              index === activeIndex ? '' : 'invisible'
+            }`}
+          >
+            It’s been{' '}
+            <span className={STATUS_TEXT[fixture.status]}>
+              {fixture.amount} {fixture.unit}
+            </span>{' '}
+            since you <span className="italic">{fixture.activity}</span>.
+          </span>
+        ))}
       </h1>
     </div>
   )
