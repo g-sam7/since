@@ -12,6 +12,8 @@
   --surface-subtle: #eef1ed;
   --surface: rgba(255, 255, 255, 0.82);
   --surface-strong: rgba(255, 255, 255, 0.96);
+  /* The strong surface made opaque, for what must hide what is beneath it. */
+  --surface-solid: #ffffff;
   --surface-header: rgba(255, 255, 255, 0.9);
   --surface-chip: #f2f4f1;
   --surface-accent: color-mix(in srgb, var(--action) 9%, var(--surface-subtle));
@@ -49,7 +51,7 @@
   --card: var(--surface-strong);
   --card-foreground: var(--text-strong);
   /* Opaque: content beneath a menu must not show through it. */
-  --popover: #ffffff;
+  --popover: var(--surface-solid);
   --popover-foreground: var(--text-strong);
   --primary: var(--action);
   --primary-foreground: var(--text-inverse);
@@ -87,6 +89,7 @@
   --surface-subtle: #171d19;
   --surface: rgba(23, 29, 25, 0.82);
   --surface-strong: rgba(29, 36, 31, 0.94);
+  --surface-solid: #1d241f;
   --surface-header: rgba(29, 36, 31, 0.9);
   --surface-chip: #151b18;
   --surface-accent: color-mix(
@@ -128,7 +131,7 @@
   --card: var(--surface-strong);
   --card-foreground: var(--text-strong);
   /* Opaque: content beneath a menu must not show through it. */
-  --popover: #1d241f;
+  --popover: var(--surface-solid);
   --popover-foreground: var(--text-strong);
   --primary: var(--action);
   --primary-foreground: var(--text-inverse);
@@ -186,6 +189,7 @@
   --color-chart-5: var(--chart-5);
   --color-surface-subtle: var(--surface-subtle);
   --color-surface-strong: var(--surface-strong);
+  --color-surface-solid: var(--surface-solid);
   --color-surface-header: var(--surface-header);
   --color-surface-selection: var(--surface-selection);
   --color-action-soft: var(--action-soft);
