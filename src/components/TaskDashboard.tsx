@@ -73,11 +73,11 @@ export function TaskDashboard({
               You don&apos;t have any active tasks.
             </p>
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             <Button disabled={!hydrated} onClick={onCreate}>
               Create a task
             </Button>
-            <Button variant="link" size="sm" asChild>
+            <Button variant="outline" asChild>
               <Link to="/archived">View archived tasks</Link>
             </Button>
           </div>
@@ -90,25 +90,33 @@ export function TaskDashboard({
     // Padding sits outside `page-wrap`, as in the header, so the list edges
     // line up with the header's logo and theme toggle.
     <main className="px-4 py-10">
-      <div className="page-wrap flex flex-col items-center">
-        <div className="mb-6 flex w-full items-center justify-center gap-3">
+      <div className="page-wrap flex flex-col">
+        <div className="mb-6 flex w-full items-center justify-between gap-3">
           <h1 className="display-title text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Your tasks
           </h1>
-          <Button
-            size="icon"
-            aria-label="New task"
-            disabled={!hydrated}
-            onClick={onCreate}
-          >
-            <PlusIcon />
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/archived">
-              <ArchiveIcon />
-              Archived
-            </Link>
-          </Button>
+          {/* Icon buttons alike in shape, each with a browser tooltip naming
+              it. Create keeps the primary fill as the main action. */}
+          <div className="flex items-center gap-2">
+            <Button
+              size="icon"
+              aria-label="New task"
+              title="New task"
+              disabled={!hydrated}
+              onClick={onCreate}
+            >
+              <PlusIcon />
+            </Button>
+            <Button variant="outline" size="icon" asChild>
+              <Link
+                to="/archived"
+                aria-label="Archived tasks"
+                title="Archived tasks"
+              >
+                <ArchiveIcon />
+              </Link>
+            </Button>
+          </div>
         </div>
         {errorAlert && <div className="mb-4 w-full">{errorAlert}</div>}
         <ul

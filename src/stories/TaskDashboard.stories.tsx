@@ -59,7 +59,7 @@ export const Populated: Story = {
     const canvas = within(canvasElement)
     await expect(canvas.getByText('Your tasks')).toBeVisible()
     await expect(
-      canvas.getByRole('link', { name: 'Archived' }),
+      canvas.getByRole('link', { name: 'Archived tasks' }),
     ).toHaveAttribute('href', '/archived')
     const cards = canvas.getAllByTestId('task-card')
     await expect(cards).toHaveLength(dashboardTasks.length)
@@ -103,6 +103,20 @@ export const HighlightedTask: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Edit See the dentist' }),
     ).toHaveFocus()
+  },
+}
+
+export const HeadingActions: Story = {
+  args: { tasks: dashboardTasks },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // Both are icon-only, so each carries a hover hint naming it.
+    await expect(
+      canvas.getByRole('button', { name: 'New task' }),
+    ).toHaveAttribute('title', 'New task')
+    const archived = canvas.getByRole('link', { name: 'Archived tasks' })
+    await expect(archived).toHaveAttribute('title', 'Archived tasks')
+    await expect(archived).toHaveAttribute('href', '/archived')
   },
 }
 

@@ -66,9 +66,10 @@ export const Populated: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(canvas.getByText('Archived tasks')).toBeVisible()
-    await expect(
-      canvas.getByRole('link', { name: 'Back to tasks' }),
-    ).toHaveAttribute('href', '/app')
+    const back = canvas.getByRole('link', { name: 'Back to tasks' })
+    await expect(back).toHaveAttribute('href', '/app')
+    // Icon-only, so it carries a hover hint naming it.
+    await expect(back).toHaveAttribute('title', 'Back to tasks')
     const rows = canvas.getAllByTestId('archived-task')
     // Rendered in the order given: newest archive first.
     await expect(rows).toHaveLength(2)

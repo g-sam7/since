@@ -92,14 +92,15 @@ export function ArchivedTaskList({
     // edges line up with the header.
     <main className="px-4 py-10">
       <div className="page-wrap flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-2">
+        {/* Laid out like the dashboard heading: an icon button with a
+            browser tooltip naming it. */}
+        <div className="flex items-center justify-between gap-3">
           <h1 className="display-title text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Archived tasks
           </h1>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/app">
+          <Button variant="outline" size="icon" asChild>
+            <Link to="/app" aria-label="Back to tasks" title="Back to tasks">
               <ArrowLeftIcon />
-              Back to tasks
             </Link>
           </Button>
         </div>
