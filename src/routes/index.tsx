@@ -46,7 +46,7 @@ function App() {
       </div>
 
       <SinceTicker />
-      <p className="mb-8 max-w-md text-base text-muted-foreground">
+      <p className="mb-10 max-w-md text-base text-muted-foreground sm:mb-24">
         Time flies. Stay on top of the things that matter. You might be
         surprised just how long it's been.
       </p>
