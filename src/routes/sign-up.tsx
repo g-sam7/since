@@ -5,7 +5,7 @@ import {
   useNavigate,
 } from '@tanstack/react-router'
 import { revalidateLogic, useForm } from '@tanstack/react-form'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 
 import { ErrorAlert } from '#/components/ErrorAlert'
@@ -50,6 +50,7 @@ type SignUpValues = z.infer<typeof signUpSchema>
 
 function SignUp() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const signUp = useMutation({
     // Throws only messages written for the user, so the alert can show them
     // as they are.
@@ -81,6 +82,9 @@ function SignUp() {
         // Shown through `signUp.error`.
         return
       }
+      // A session that ended without signing out (e.g. expired) leaves the
+      // previous user's data cached, which the loaders would serve as is.
+      queryClient.clear()
       await navigate({ to: '/app' })
     },
   })
