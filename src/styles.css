@@ -48,7 +48,8 @@
   --foreground: var(--text-strong);
   --card: var(--surface-strong);
   --card-foreground: var(--text-strong);
-  --popover: var(--surface-strong);
+  /* Opaque: content beneath a menu must not show through it. */
+  --popover: #ffffff;
   --popover-foreground: var(--text-strong);
   --primary: var(--action);
   --primary-foreground: var(--text-inverse);
@@ -126,7 +127,8 @@
   --foreground: var(--text-strong);
   --card: var(--surface-strong);
   --card-foreground: var(--text-strong);
-  --popover: var(--surface-strong);
+  /* Opaque: content beneath a menu must not show through it. */
+  --popover: #1d241f;
   --popover-foreground: var(--text-strong);
   --primary: var(--action);
   --primary-foreground: var(--text-inverse);
