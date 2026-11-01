@@ -3,6 +3,7 @@ import { revalidateLogic, useForm } from '@tanstack/react-form'
 import { format } from 'date-fns'
 
 import { ErrorAlert } from '#/components/ErrorAlert'
+import { FieldError } from '#/components/FieldError'
 import { Button } from '#/components/utils/Button'
 import { Input } from '#/components/utils/Input'
 import { Label } from '#/components/utils/Label'
@@ -267,29 +268,5 @@ export function TaskForm({
         )}
       </form.Subscribe>
     </form>
-  )
-}
-
-type FieldErrorProps = {
-  id: string
-  /** Schema issues and validator messages, as TanStack Form collects them. */
-  errors: ReadonlyArray<{ message: string } | string | undefined>
-}
-
-function FieldError({ id, errors }: FieldErrorProps) {
-  // The form schema and a field validator can report the same message.
-  const messages = [
-    ...new Set(
-      errors.flatMap((error) => {
-        if (!error) return []
-        return typeof error === 'string' ? error : error.message
-      }),
-    ),
-  ]
-  if (messages.length === 0) return null
-  return (
-    <p id={id} className="text-sm text-destructive">
-      {messages.join(' ')}
-    </p>
   )
 }
