@@ -1,3 +1,4 @@
+import { MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Button } from '#/components/utils/Button'
@@ -76,10 +77,16 @@ export default function ThemeToggle() {
       aria-label={label}
       title={label}
       variant="outline"
-      size="sm"
-      className="rounded-full border-border bg-surface-subtle px-3 shadow-[0_10px_24px_var(--shadow-color)]"
+      size="icon-sm"
+      className="rounded-full border-border bg-surface-subtle shadow-[0_10px_24px_var(--shadow-color)]"
     >
-      {mode === 'auto' ? 'Auto' : mode === 'dark' ? 'Dark' : 'Light'}
+      {mode === 'auto' ? (
+        <MonitorIcon />
+      ) : mode === 'dark' ? (
+        <MoonIcon />
+      ) : (
+        <SunIcon />
+      )}
     </Button>
   )
 }
