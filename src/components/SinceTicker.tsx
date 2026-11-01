@@ -55,8 +55,7 @@ export function SinceTicker() {
         isFadingOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      It&apos;s been {current.amount} {current.unit} since you{' '}
-      {current.activity}.
+      It’s been {current.amount} {current.unit} since you {current.activity}.
     </h1>
   )
 }
