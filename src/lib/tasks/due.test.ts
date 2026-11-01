@@ -118,6 +118,23 @@ describe('formatTaskElapsed', () => {
       ),
     ).toBe('9 days')
   })
+
+  it('reads "less than a minute" up to 59 seconds', () => {
+    const task = { ...baseTask, lastCompletedAt: at('2026-03-01T00:00:00Z') }
+    expect(formatTaskElapsed(task, at('2026-03-01T00:00:59Z'))).toBe(
+      'less than a minute',
+    )
+    expect(formatTaskElapsed(task, at('2026-03-01T00:01:00Z'))).toBe('1 minute')
+  })
+
+  it('reads "less than a minute" when the anchor is just ahead of now', () => {
+    expect(
+      formatTaskElapsed(
+        { ...baseTask, lastCompletedAt: at('2026-03-01T00:00:02Z') },
+        at('2026-03-01T00:00:00Z'),
+      ),
+    ).toBe('less than a minute')
+  })
 })
 
 describe('formatDueIn', () => {

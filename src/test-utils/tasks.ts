@@ -1,3 +1,4 @@
+import type { ArchivedTask } from '#/db/task-schema'
 import type { DashboardTask, TaskWithCreator } from '#/lib/tasks/dashboard'
 import { toDashboardTask } from '#/lib/tasks/dashboard'
 
@@ -40,6 +41,12 @@ export const overdueTask = fixture({
   description: 'The HVAC filter in the hallway return.',
   notes: '20x25x1, MERV 11.\nSpares are in the garage cabinet.',
   lastCompletedAt: new Date('2026-05-06T12:00:00Z'),
+})
+
+/** The overdue task just marked done: measured from now and upcoming. */
+export const justCompletedTask = fixture({
+  ...overdueTask,
+  lastCompletedAt: FIXTURE_NOW,
 })
 
 /** Completed 6 days ago on a weekly interval: due tomorrow. */
@@ -86,4 +93,33 @@ export const dashboardTasks: DashboardTask[] = [
   neverCompletedTask,
   deletedCreatorTask,
   upcomingTask,
+]
+
+function archivedFixture(
+  overrides: Partial<TaskWithCreator> & { archivedAt: Date },
+): ArchivedTask {
+  return { ...makeTask(overrides), archivedAt: overrides.archivedAt }
+}
+
+/** Archived 5 days ago; completed before it was archived. */
+export const archivedCompletedTask = archivedFixture({
+  name: 'Renew the passport',
+  intervalCount: 10,
+  intervalUnit: 'year',
+  lastCompletedAt: new Date('2026-07-06T12:00:00Z'),
+  archivedAt: new Date('2026-09-01T12:00:00Z'),
+})
+
+/** Archived 17 days ago without ever being completed. */
+export const archivedNeverCompletedTask = archivedFixture({
+  name: 'Descale the kettle',
+  intervalCount: 1,
+  intervalUnit: 'month',
+  archivedAt: new Date('2026-08-20T12:00:00Z'),
+})
+
+/** The archived view in the order the server returns: newest archive first. */
+export const archivedTasks: ArchivedTask[] = [
+  archivedCompletedTask,
+  archivedNeverCompletedTask,
 ]

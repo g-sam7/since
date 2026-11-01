@@ -72,5 +72,9 @@ export const taskFormSchema = taskFieldsSchema.extend({ lastCompletedOn })
 
 export const updateTaskSchema = taskFieldsSchema.extend({ taskId: z.uuid() })
 
+/** Input for the complete, archive, restore, and delete server functions. */
+export const taskIdSchema = z.object({ taskId: z.uuid() })
+
 export type TaskFormValues = z.input<typeof taskFormSchema>
 export type UpdateTaskValues = z.input<typeof updateTaskSchema>
+export type TaskIdInput = z.input<typeof taskIdSchema>

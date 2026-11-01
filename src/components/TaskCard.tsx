@@ -1,7 +1,5 @@
-import { UTCDate } from '@date-fns/utc'
 import { useHydrated } from '@tanstack/react-router'
-import { format } from 'date-fns'
-import { PencilIcon } from 'lucide-react'
+import { ArchiveIcon, CheckIcon, PencilIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
 import { Badge } from '#/components/utils/Badge'
@@ -18,6 +16,7 @@ import type { DashboardTask } from '#/lib/tasks/dashboard'
 import type { DueStatus } from '#/lib/tasks/due'
 import { formatDueIn } from '#/lib/tasks/due'
 import { formatElapsedLine } from '#/lib/tasks/elapsed'
+import { formatTaskDate } from '#/lib/tasks/format-date'
 
 const DUE_STATUS_LABEL: Record<DueStatus, string> = {
   overdue: 'Overdue',
@@ -31,46 +30,54 @@ const DUE_STATUS_VARIANT: Record<DueStatus, 'danger' | 'warning' | 'ok'> = {
   upcoming: 'ok',
 }
 
-// Dates are formatted in UTC so the server render and the client hydration
-// agree regardless of the browser's zone; the due helpers already work in UTC.
-// Known limitation: users west of UTC can see the next calendar day for a
-// task due late in their evening. The create form stores "last done on" as
-// midnight UTC, so a picked date always displays as the day picked.
-function formatDate(date: Date): string {
-  return format(new UTCDate(date), 'MMM d, yyyy')
-}
-
 export type TaskCardProps = {
   task: DashboardTask
   /** Reference time for elapsed and due copy; defaults to now. */
   now?: Date
   onEdit: () => void
+  onComplete: () => void
+  onArchive: () => void
+  /** Disables Done and Archive, e.g. while a task action is in flight. */
+  actionsDisabled?: boolean
   /**
-   * Marks the card as just saved: it is outlined briefly, scrolled into view,
-   * and its edit button takes focus so keyboard and screen reader users land
-   * on it.
+   * Marks the card as just saved or completed: it is outlined briefly,
+   * scrolled into view, and the button named by `highlightFocus` takes focus
+   * so keyboard and screen reader users land on it.
    */
   highlighted?: boolean
+  highlightFocus?: TaskCardFocus
 }
+
+/** The button a highlighted card focuses: the one the user last acted with. */
+export type TaskCardFocus = 'edit' | 'done'
 
 // Purely presentational so stories can render it with fixture data.
 export function TaskCard({
   task,
   now = new Date(),
   onEdit,
+  onComplete,
+  onArchive,
+  actionsDisabled = false,
   highlighted = false,
+  highlightFocus = 'edit',
 }: TaskCardProps) {
-  // Editing needs JavaScript, so the button stays disabled until hydration.
+  // The actions need JavaScript, so the buttons stay disabled until hydration.
   const hydrated = useHydrated()
   // Refs rather than state: these only reach the DOM to scroll and focus.
   const cardRef = useRef<HTMLDivElement>(null)
   const editButtonRef = useRef<HTMLButtonElement>(null)
+  const doneButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    if (!highlighted) return
+    // A disabled button cannot take focus, so wait until the action that
+    // highlighted the card has finished re-enabling its buttons.
+    if (!highlighted || actionsDisabled) return
+    const focusTarget =
+      highlightFocus === 'done' ? doneButtonRef : editButtonRef
     // Focus without the browser's instant jump so the scroll below can be
     // smooth; `nearest` leaves an already visible card where it is.
-    editButtonRef.current?.focus({ preventScroll: true })
+    focusTarget.current?.focus({ preventScroll: true })
     const reduceMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches
@@ -78,7 +85,7 @@ export function TaskCard({
       block: 'nearest',
       behavior: reduceMotion ? 'auto' : 'smooth',
     })
-  }, [highlighted])
+  }, [highlighted, highlightFocus, actionsDisabled])
 
   return (
     <Card
@@ -110,6 +117,15 @@ export function TaskCard({
             >
               <PencilIcon />
             </Button>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`Archive ${task.name}`}
+              disabled={!hydrated || actionsDisabled}
+              onClick={onArchive}
+            >
+              <ArchiveIcon />
+            </Button>
           </div>
         </div>
         <CardDescription className="text-base text-foreground">
@@ -128,14 +144,28 @@ export function TaskCard({
           )}
         </CardContent>
       )}
-      <CardFooter className="flex-col items-start gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          Due {formatDueIn(task, now)} · {formatDate(task.nextDueAt)}
-        </p>
-        <p>
-          Created {formatDate(task.createdAt)} by{' '}
-          {task.createdByName ?? 'Unknown'}
-        </p>
+      <CardFooter className="flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-1 text-xs text-muted-foreground">
+          <p>
+            Due {formatDueIn(task, now)} · {formatTaskDate(task.nextDueAt)}
+          </p>
+          <p>
+            Created {formatTaskDate(task.createdAt)} by{' '}
+            {task.createdByName ?? 'Unknown'}
+          </p>
+        </div>
+        <Button
+          ref={doneButtonRef}
+          variant="outline"
+          size="sm"
+          // The visible "Done" alone would not say which task it is for.
+          aria-label={`Mark ${task.name} done`}
+          disabled={!hydrated || actionsDisabled}
+          onClick={onComplete}
+        >
+          <CheckIcon />
+          Done
+        </Button>
       </CardFooter>
     </Card>
   )

@@ -6,6 +6,7 @@ import {
   FIXTURE_NOW,
   deletedCreatorTask,
   dueSoonTask,
+  justCompletedTask,
   neverCompletedTask,
   overdueTask,
   upcomingTask,
@@ -21,6 +22,8 @@ const meta = {
   args: {
     now: FIXTURE_NOW,
     onEdit: fn(),
+    onComplete: fn(),
+    onArchive: fn(),
   },
   decorators: [
     (Story) => (
@@ -63,6 +66,69 @@ export const Edit: Story = {
       canvas.getByRole('button', { name: 'Edit Change the air filter' }),
     )
     await expect(args.onEdit).toHaveBeenCalledOnce()
+  },
+}
+
+export const Done: Story = {
+  args: { task: overdueTask },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const done = canvas.getByRole('button', {
+      name: 'Mark Change the air filter done',
+    })
+    await expect(done).toHaveTextContent('Done')
+    await userEvent.click(done)
+    await expect(args.onComplete).toHaveBeenCalledOnce()
+    await expect(args.onArchive).not.toHaveBeenCalled()
+  },
+}
+
+export const Archive: Story = {
+  args: { task: overdueTask },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Archive Change the air filter' }),
+    )
+    await expect(args.onArchive).toHaveBeenCalledOnce()
+    await expect(args.onComplete).not.toHaveBeenCalled()
+  },
+}
+
+export const ActionsDisabled: Story = {
+  args: { task: overdueTask, actionsDisabled: true },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // Disabled while an action is in flight so a double-click cannot submit
+    // twice. Editing is unaffected.
+    await expect(
+      canvas.getByRole('button', { name: 'Mark Change the air filter done' }),
+    ).toBeDisabled()
+    await expect(
+      canvas.getByRole('button', { name: 'Archive Change the air filter' }),
+    ).toBeDisabled()
+    await expect(
+      canvas.getByRole('button', { name: 'Edit Change the air filter' }),
+    ).toBeEnabled()
+  },
+}
+
+export const JustCompleted: Story = {
+  args: { task: justCompletedTask, highlighted: true, highlightFocus: 'done' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(
+      canvas.getByText("It's been less than a minute since you last did this."),
+    ).toBeVisible()
+    await expect(canvas.getByText('Upcoming')).toHaveAttribute(
+      'data-status',
+      'upcoming',
+    )
+    await expect(canvas.getByText(/^Due in 3 months/)).toBeVisible()
+    // Focus returns to the Done button the user pressed.
+    await expect(
+      canvas.getByRole('button', { name: 'Mark Change the air filter done' }),
+    ).toHaveFocus()
   },
 }
 

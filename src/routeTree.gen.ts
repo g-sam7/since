@@ -13,6 +13,7 @@ import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedArchivedRouteImport } from './routes/_authed/archived'
 import { Route as AuthedAppRouteImport } from './routes/_authed/app'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -35,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedArchivedRoute = AuthedArchivedRouteImport.update({
+  id: '/archived',
+  path: '/archived',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedAppRoute = AuthedAppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/app': typeof AuthedAppRoute
+  '/archived': typeof AuthedArchivedRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/app': typeof AuthedAppRoute
+  '/archived': typeof AuthedArchivedRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -67,13 +75,20 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/_authed/app': typeof AuthedAppRoute
+  '/_authed/archived': typeof AuthedArchivedRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/sign-up' | '/app' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/app'
+    | '/archived'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in' | '/sign-up' | '/app' | '/api/auth/$'
+  to: '/' | '/sign-in' | '/sign-up' | '/app' | '/archived' | '/api/auth/$'
   id:
     | '__root__'
     | '/'
@@ -81,6 +96,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/_authed/app'
+    | '/_authed/archived'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -122,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/archived': {
+      id: '/_authed/archived'
+      path: '/archived'
+      fullPath: '/archived'
+      preLoaderRoute: typeof AuthedArchivedRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/app': {
       id: '/_authed/app'
       path: '/app'
@@ -141,10 +164,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedAppRoute: typeof AuthedAppRoute
+  AuthedArchivedRoute: typeof AuthedArchivedRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedAppRoute: AuthedAppRoute,
+  AuthedArchivedRoute: AuthedArchivedRoute,
 }
 
 const AuthedRouteWithChildren =

@@ -1,18 +1,28 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { z } from 'zod'
 
+import type { ArchivedTask } from '#/db/task-schema'
 import { AppError } from '#/lib/app-error'
 import { authMiddleware } from '#/lib/auth-middleware'
 import { toDashboardTask } from './dashboard'
 import type { DashboardTask } from './dashboard'
 import {
+  archiveTask,
+  completeTask,
   createTask,
+  deleteTask,
   getOrCreatePersonalWorkspace,
   listActiveTasks,
+  listArchivedTasks,
+  restoreTask,
   updateTask,
 } from './repository'
-import { taskFormSchema, updateTaskSchema } from './task-input'
-import type { TaskFormValues, UpdateTaskValues } from './task-input'
+import { taskFormSchema, taskIdSchema, updateTaskSchema } from './task-input'
+import type {
+  TaskFormValues,
+  TaskIdInput,
+  UpdateTaskValues,
+} from './task-input'
 
 /** Parses server-function input, rejecting it as `invalidInput`. */
 function parseInput<TSchema extends z.ZodType>(
@@ -74,4 +84,65 @@ export const updateDashboardTask = createServerFn({ method: 'POST' })
     // Also covers a task id from another workspace, which the scoped update
     // leaves untouched.
     if (!updated) throw new AppError('notFound')
+  })
+
+/** Archived tasks in the signed-in user's workspace, newest archive first. */
+export const listArchivedWorkspaceTasks = createServerFn({ method: 'GET' })
+  .middleware([authMiddleware])
+  .handler(async ({ context }): Promise<ArchivedTask[]> => {
+    const workspace = await getOrCreatePersonalWorkspace(
+      context.session.user.id,
+    )
+    return listArchivedTasks(workspace.id)
+  })
+
+// Each state change below throws `notFound` when the scoped repository call
+// matches nothing: a task in another workspace, one already in the target
+// state, or one that no longer exists.
+
+/** Records a completion now, by the signed-in user, on an active task. */
+export const completeDashboardTask = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .validator((input: TaskIdInput) => parseInput(taskIdSchema, input))
+  .handler(async ({ context, data }): Promise<void> => {
+    const userId = context.session.user.id
+    const workspace = await getOrCreatePersonalWorkspace(userId)
+    const completed = await completeTask(workspace.id, data.taskId, userId)
+    if (!completed) throw new AppError('notFound')
+  })
+
+/** Archives an active task, hiding it from the dashboard. */
+export const archiveDashboardTask = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .validator((input: TaskIdInput) => parseInput(taskIdSchema, input))
+  .handler(async ({ context, data }): Promise<void> => {
+    const workspace = await getOrCreatePersonalWorkspace(
+      context.session.user.id,
+    )
+    const archived = await archiveTask(workspace.id, data.taskId)
+    if (!archived) throw new AppError('notFound')
+  })
+
+/** Restores an archived task to the dashboard. */
+export const restoreArchivedTask = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .validator((input: TaskIdInput) => parseInput(taskIdSchema, input))
+  .handler(async ({ context, data }): Promise<void> => {
+    const workspace = await getOrCreatePersonalWorkspace(
+      context.session.user.id,
+    )
+    const restored = await restoreTask(workspace.id, data.taskId)
+    if (!restored) throw new AppError('notFound')
+  })
+
+/** Permanently deletes an archived task and its completion history. */
+export const deleteArchivedTask = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .validator((input: TaskIdInput) => parseInput(taskIdSchema, input))
+  .handler(async ({ context, data }): Promise<void> => {
+    const workspace = await getOrCreatePersonalWorkspace(
+      context.session.user.id,
+    )
+    const deleted = await deleteTask(workspace.id, data.taskId)
+    if (!deleted) throw new AppError('notFound')
   })

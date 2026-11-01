@@ -192,6 +192,8 @@ export type NewWorkspace = typeof workspace.$inferInsert
 export type WorkspaceMember = typeof workspaceMember.$inferSelect
 export type Task = typeof task.$inferSelect
 export type NewTask = typeof task.$inferInsert
+/** A task known to be archived, so `archivedAt` is always set. */
+export type ArchivedTask = Task & { archivedAt: Date }
 export type TaskCompletion = typeof taskCompletion.$inferSelect
 export type IntervalUnit = (typeof intervalUnit.enumValues)[number]
 export type WorkspaceMemberRole =
