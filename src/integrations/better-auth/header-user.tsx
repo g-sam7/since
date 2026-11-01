@@ -1,10 +1,43 @@
 import { authClient } from '#/lib/auth-client'
 import { Button } from '#/components/utils/Button'
-import { Link, useNavigate } from '@tanstack/react-router'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '#/components/utils/DropdownMenu'
+import { useQueryClient } from '@tanstack/react-query'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { LogOutIcon } from 'lucide-react'
 
 export default function BetterAuthHeader() {
   const { data: session, isPending } = authClient.useSession()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const pathname = useLocation({ select: (location) => location.pathname })
+
+  async function handleSignOut() {
+    try {
+      await authClient.signOut()
+    } catch {
+      // Session will be invalidated server-side on next navigation
+    }
+    try {
+      await navigate({ to: '/sign-in' })
+    } catch {
+      // Navigation should not fail, but if it does the user must still leave
+      // a page whose session is gone; a full load also drops all memory.
+      window.location.assign('/sign-in')
+    } finally {
+      // Loaders serve fresh cached data without refetching, so the next user
+      // to sign in in this tab would otherwise see this user's tasks. Cleared
+      // after leaving the page so its queries are not refetched signed out,
+      // and whether or not the navigation succeeded.
+      queryClient.clear()
+    }
+  }
 
   if (isPending) {
     return (
@@ -14,38 +47,48 @@ export default function BetterAuthHeader() {
 
   if (session?.user) {
     return (
-      <div className="flex items-center gap-2">
-        {session.user.image ? (
-          <img
-            src={session.user.image}
-            alt=""
-            className="h-8 w-8 rounded-full border border-border object-cover"
-          />
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface-subtle">
-            <span className="text-xs font-medium text-muted-foreground">
-              {session.user.name.charAt(0).toUpperCase() || 'U'}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          {/* Styled like the theme toggle beside it. */}
+          <Button
+            variant="outline"
+            size="icon-sm"
+            aria-label="Account menu"
+            title="Account menu"
+            className="overflow-hidden rounded-full border-border bg-surface-subtle shadow-[0_10px_24px_var(--shadow-color)]"
+          >
+            {session.user.image ? (
+              <img
+                src={session.user.image}
+                alt=""
+                className="size-full object-cover"
+              />
+            ) : (
+              <span className="text-xs font-medium text-muted-foreground">
+                {session.user.name.charAt(0).toUpperCase() || 'U'}
+              </span>
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel className="flex flex-col gap-0.5">
+            <span className="truncate">{session.user.name}</span>
+            <span className="truncate text-xs font-normal text-muted-foreground">
+              {session.user.email}
             </span>
-          </div>
-        )}
-        <Button
-          onClick={async () => {
-            try {
-              await authClient.signOut()
-            } catch {
-              // Session will be invalidated server-side on next navigation
-            }
-            await navigate({ to: '/sign-in' })
-          }}
-          variant="outline"
-          size="sm"
-          className="rounded-full bg-surface-subtle px-4"
-        >
-          Sign out
-        </Button>
-      </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onSelect={() => void handleSignOut()}>
+            <LogOutIcon />
+            Sign out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     )
   }
+
+  // On the sign-in page the link would lead nowhere.
+  if (pathname === '/sign-in') return null
 
   return (
     <Button

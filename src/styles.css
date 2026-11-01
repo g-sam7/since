@@ -1,6 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500..700;1,6..72,500..700&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
-@plugin '@tailwindcss/typography';
 
 @import 'tw-animate-css';
 
@@ -13,7 +12,9 @@
   --surface-subtle: #eef1ed;
   --surface: rgba(255, 255, 255, 0.82);
   --surface-strong: rgba(255, 255, 255, 0.96);
-  --surface-header: rgba(246, 247, 244, 0.88);
+  /* The strong surface made opaque, for what must hide what is beneath it. */
+  --surface-solid: #ffffff;
+  --surface-header: rgba(255, 255, 255, 0.9);
   --surface-chip: #f2f4f1;
   --surface-accent: color-mix(in srgb, var(--action) 9%, var(--surface-subtle));
   --surface-selection: rgba(51, 93, 135, 0.18);
@@ -49,7 +50,8 @@
   --foreground: var(--text-strong);
   --card: var(--surface-strong);
   --card-foreground: var(--text-strong);
-  --popover: var(--surface-strong);
+  /* Opaque: content beneath a menu must not show through it. */
+  --popover: var(--surface-solid);
   --popover-foreground: var(--text-strong);
   --primary: var(--action);
   --primary-foreground: var(--text-inverse);
@@ -87,7 +89,8 @@
   --surface-subtle: #171d19;
   --surface: rgba(23, 29, 25, 0.82);
   --surface-strong: rgba(29, 36, 31, 0.94);
-  --surface-header: rgba(16, 20, 17, 0.88);
+  --surface-solid: #1d241f;
+  --surface-header: rgba(29, 36, 31, 0.9);
   --surface-chip: #151b18;
   --surface-accent: color-mix(
     in srgb,
@@ -127,7 +130,8 @@
   --foreground: var(--text-strong);
   --card: var(--surface-strong);
   --card-foreground: var(--text-strong);
-  --popover: var(--surface-strong);
+  /* Opaque: content beneath a menu must not show through it. */
+  --popover: var(--surface-solid);
   --popover-foreground: var(--text-strong);
   --primary: var(--action);
   --primary-foreground: var(--text-inverse);
@@ -185,6 +189,7 @@
   --color-chart-5: var(--chart-5);
   --color-surface-subtle: var(--surface-subtle);
   --color-surface-strong: var(--surface-strong);
+  --color-surface-solid: var(--surface-solid);
   --color-surface-header: var(--surface-header);
   --color-surface-selection: var(--surface-selection);
   --color-action-soft: var(--action-soft);
@@ -220,6 +225,18 @@
   /* Marks a just-saved task card, then fades away (`animate-highlight-fade`). */
   --animate-highlight-fade: highlight-fade 2.5s ease-out forwards;
 
+  /* Fills the landing page clock's wedge; the duration is set inline. */
+  --animate-clock-sweep: clock-sweep linear forwards;
+
+  @keyframes clock-sweep {
+    from {
+      stroke-dashoffset: 100;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
   @keyframes highlight-fade {
     0%,
     40% {
@@ -229,12 +246,6 @@
       outline-color: transparent;
     }
   }
-}
-
-html,
-body,
-#app {
-  min-height: 100%;
 }
 
 body {
@@ -321,20 +332,13 @@ pre code {
   color: inherit;
 }
 
-.prose pre {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #18212b;
-  color: #edf3ff;
-}
-
 .page-wrap {
   width: min(1080px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
 .display-title {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: 'Newsreader', Georgia, serif;
 }
 
 .island-shell {
@@ -347,23 +351,6 @@ pre code {
   backdrop-filter: blur(4px);
 }
 
-.feature-card {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--surface-strong) 94%, white 6%),
-    var(--surface)
-  );
-  box-shadow:
-    0 1px 0 var(--inset-glint) inset,
-    0 16px 32px color-mix(in srgb, var(--shadow-color) 94%, transparent),
-    0 4px 14px color-mix(in srgb, var(--shadow-color) 72%, transparent);
-}
-
-.feature-card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--primary) 30%, var(--line));
-}
-
 button,
 .island-shell,
 a {
@@ -372,67 +359,6 @@ a {
     color 180ms ease,
     border-color 180ms ease,
     transform 180ms ease;
-}
-
-.island-kicker {
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 0.69rem;
-  color: var(--text-soft);
-}
-
-.nav-link {
-  position: relative;
-  text-decoration: none;
-  color: var(--text-soft);
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -8px;
-  width: 100%;
-  height: 2px;
-  transform: scaleX(0);
-  transform-origin: left;
-  background: linear-gradient(
-    90deg,
-    var(--primary),
-    color-mix(in srgb, var(--primary) 45%, white)
-  );
-  transition: transform 170ms ease;
-}
-
-.nav-link:hover,
-.nav-link.is-active {
-  color: var(--foreground);
-}
-
-.nav-link:hover::after,
-.nav-link.is-active::after {
-  transform: scaleX(1);
-}
-
-.rise-in {
-  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.site-footer {
-  border-top: 1px solid var(--line);
-  background: color-mix(in oklab, var(--surface-header) 84%, transparent 16%);
 }
 
 @layer base {

@@ -14,6 +14,7 @@ import { dashboardTasksQueryOptions } from '#/lib/tasks/queries'
 const TaskFormSheet = lazy(() => import('#/components/TaskFormSheet'))
 
 export const Route = createFileRoute('/_authed/app')({
+  head: () => ({ meta: [{ title: 'Your tasks · Since' }] }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData(dashboardTasksQueryOptions),
   component: AppPage,

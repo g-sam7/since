@@ -41,6 +41,16 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/favicon-32.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        href: '/apple-touch-icon.png',
+      },
     ],
   }),
   shellComponent: RootDocument,
@@ -53,7 +63,7 @@ function NotFound() {
       <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
         Not found
       </p>
-      <h1 className="display-title mb-3 max-w-2xl text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+      <h1 className="display-title mb-3 max-w-2xl text-4xl font-semibold text-foreground sm:text-5xl">
         That page does not exist.
       </h1>
       <p className="mb-8 max-w-md text-base text-muted-foreground">
@@ -73,9 +83,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-surface-selection selection:text-foreground">
+      {/* A full-height column whose page area grows, so the footer sits at
+          the bottom of the screen when the page is shorter than it. The page
+          area is a column too, so a page can grow to fill it. */}
+      <body className="flex min-h-dvh flex-col font-sans antialiased [overflow-wrap:anywhere] selection:bg-surface-selection selection:text-foreground">
         <Header />
-        {children}
+        <div className="flex flex-1 flex-col">{children}</div>
         <Footer />
         <TanStackDevtools
           config={{

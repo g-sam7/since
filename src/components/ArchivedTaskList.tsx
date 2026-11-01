@@ -3,6 +3,7 @@ import { ArchiveRestoreIcon, ArrowLeftIcon, Trash2Icon } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 import { ErrorAlert } from '#/components/ErrorAlert'
+import { FadingScrollList } from '#/components/FadingScrollList'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -91,11 +92,11 @@ export function ArchivedTaskList({
     // Padding sits outside `page-wrap`, as on the dashboard, so the list
     // edges line up with the header.
     <main className="px-4 py-10">
-      <div className="page-wrap flex flex-col gap-6">
+      <div className="page-wrap flex flex-col">
         {/* Laid out like the dashboard heading: an icon button with a
             browser tooltip naming it. */}
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="display-title text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <div className="mb-6 flex w-full items-center justify-between gap-3">
+          <h1 className="display-title text-3xl font-semibold text-foreground sm:text-4xl">
             Archived tasks
           </h1>
           <Button variant="outline" size="icon" asChild>
@@ -106,9 +107,11 @@ export function ArchivedTaskList({
         </div>
 
         {listError && (
-          <ErrorAlert onDismiss={onDismissError}>
-            {getTaskActionErrorMessage(listError)}
-          </ErrorAlert>
+          <div className="mb-4 w-full">
+            <ErrorAlert onDismiss={onDismissError}>
+              {getTaskActionErrorMessage(listError)}
+            </ErrorAlert>
+          </div>
         )}
 
         {tasks.length === 0 ? (
@@ -117,10 +120,11 @@ export function ArchivedTaskList({
             here.
           </p>
         ) : (
-          <ul aria-label="Archived tasks" className="flex flex-col gap-3">
+          // Scrolls and fades like the dashboard's list.
+          <FadingScrollList aria-label="Archived tasks">
             {tasks.map((task) => (
               <li key={task.id}>
-                <Card data-testid="archived-task" className="py-4">
+                <Card data-testid="archived-task" className="py-5">
                   <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-col gap-1">
                       <p className="font-semibold">{task.name}</p>
@@ -165,7 +169,7 @@ export function ArchivedTaskList({
                 </Card>
               </li>
             ))}
-          </ul>
+          </FadingScrollList>
         )}
       </div>
 
